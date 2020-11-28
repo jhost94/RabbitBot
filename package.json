@@ -2,8 +2,9 @@
   "name": "rabbitbot",
   "version": "0.0.0",
   "description": "A twitch bot",
-  "main": "app.js",
+  "main": "src",
   "scripts": {
+    "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/jhost94/RabbitBot/issues"
   },
-  "homepage": "https://github.com/jhost94/RabbitBot#readme"
+  "homepage": "https://github.com/jhost94/RabbitBot#readme",
+  "dependencies": {
+    "tmi.js": "^1.5.0"
+  }
 }
