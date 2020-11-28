@@ -1,0 +1,40 @@
+body {
+    overflow: hidden;
+    font-size: 800%;
+    display: inline-block;
+}
+
+#menu {
+    font-family: "CenturyGothicBold";
+    display: inline-block;
+}
+
+#gameName {
+    color: darkred;
+    background-color: black;
+    display: inline-block;
+    position: "abolute";
+    width: 400px;
+}
+
+#propertyName {
+    position: absolute;
+    float: left;
+    width: 50%;
+}
+
+#propertyValue {
+    float: right;
+    position: absolute;
+    left: 50%;
+    width: 50%;
+}
+
+@font-face {
+    font-family: "CenturyGothicBold";
+    src: url("font/century-gothic-bold.ttf");
+}
+@font-face {
+    font-family: "CenturyGothic";
+    src: url("font/century-gothic.ttf");
+}
