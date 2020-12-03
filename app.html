@@ -1,6 +1,7 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="rabbitbot.css"/>
+        <script src="/scripts/tmi.min.js"></script>
 
 
     </head>
@@ -8,9 +9,15 @@
 
     <body id="menu">
         <script>
-            import app from "app"
+            import {Init} from "app.js"
 
-            app.init();
+            const init;
+
+            function start(){
+                init = new Init();
+            }
+
+            start();
         </script>
         <div id="gameName"><nav id="propertyName">Test &nbsp;</nav><section id="propertyValue">&nbsp;Num</section></div>
 
