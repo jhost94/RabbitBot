@@ -1,6 +1,6 @@
 {
   "name": "rabbitbot",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A twitch bot",
   "main": "src",
   "scripts": {

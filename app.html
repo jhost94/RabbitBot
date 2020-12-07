@@ -1,16 +1,16 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="rabbitbot.css"/>
-        <script data-main="scripts/main" src="/scripts/require.js"></script>
-        <script> src="/src/app.js"</script>
-
+        <script src="./src/app.js"></script>
     </head>
 
 
     <body id="menu">
         <script>
+
             //var app = require('./src/app.js');
-            var bot = app.init();
+            var bot = new rabbitBot();
+            bot.init();
             //app.init();
 
         </script>
