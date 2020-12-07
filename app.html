@@ -1,23 +1,18 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="rabbitbot.css"/>
-        <script src="/scripts/tmi.min.js"></script>
-
+        <script data-main="scripts/main" src="/scripts/require.js"></script>
+        <script> src="/src/app.js"</script>
 
     </head>
 
 
     <body id="menu">
         <script>
-            import {Init} from "app.js"
+            //var app = require('./src/app.js');
+            var bot = app.init();
+            //app.init();
 
-            const init;
-
-            function start(){
-                init = new Init();
-            }
-
-            start();
         </script>
         <div id="gameName"><nav id="propertyName">Test &nbsp;</nav><section id="propertyValue">&nbsp;Num</section></div>
 
