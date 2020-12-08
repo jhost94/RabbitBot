@@ -1,5 +1,5 @@
 //just a test to see if this will work
-var rabbitBot = function(){
+//var rabbitBot = function(){
 const tmi = require('tmi.js');
 const botConfig = require('../config.js');
 
@@ -59,4 +59,4 @@ client.on('message', (channel, tags, message, self) => {
 		client.say(channel, `Your death count is ${testCount}`);
 	}
 });
-}
+//}
