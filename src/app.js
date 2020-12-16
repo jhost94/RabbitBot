@@ -1,7 +1,3 @@
-//just a test to see if this will work
-//var rabbitBot = function(){
-const tmi = require('tmi.js');
-const botConfig = require('../config.js');
 
 const options = {
     options: { 
@@ -12,38 +8,25 @@ const options = {
 		reconnect: true
 	},
 	identity: {
-		username: botConfig.botName,
-		password: botConfig.oauth
+		username: botName,
+		password: oauth
 	},
-	channels: botConfig.channel
+	channels: channel
 }
 
 let testCount = 0;
 
-
 const client = new tmi.client(options);
-
-
-exports.init = function(){
 	
-	if (options.identity){
+	if (!options.identity.username){
 		console.log("import failed");
 
 		options.channels = ["jhost94"];
 		options.identity.username = "princesspotato_bot";
 		options.identity.password = "611w4kmblmhoebf483dkm29zwv4pax";
 	}
-	
-	console.log("Hello world");
-	console.log(botConfig.botName);
-	console.log(options.identity.username);
 
-    client.connect();
-	client.on("connected", (channel, port) => {
-		client.action(channel, "Hello, Rabbit bot is now in the chat!");
-	});
-
-}
+	client.connect();
 
 client.on('message', (channel, tags, message, self) => {
 	// Ignore echoed messages.
@@ -51,7 +34,6 @@ client.on('message', (channel, tags, message, self) => {
 
 	if(message.toLowerCase() === '!rb') {
         // "@alca, heya!"
-        //client.say(channel, "Hello World!")
         client.say(channel, `@${tags.username}, heya!`);
 	}
 	if(message.toLowerCase() === "!k") {
@@ -59,4 +41,3 @@ client.on('message', (channel, tags, message, self) => {
 		client.say(channel, `Your death count is ${testCount}`);
 	}
 });
-//}
