@@ -1,5 +1,5 @@
 {
-  "name": "rabbitbot",
+  "name": "rabbot",
   "version": "0.1.0",
   "description": "A twitch bot",
   "main": "src",
