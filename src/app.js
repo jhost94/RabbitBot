@@ -14,30 +14,59 @@ const options = {
 	channels: channel
 }
 
-let testCount = 0;
-
 const client = new tmi.client(options);
-	
+
+let commands = {
+	bitjs: bitjs,
+	test: test,
+	commands: cmd,
+	setname: setTitleName,
+	setvalue: setTitleValue
+}
+/*
 	if (!options.identity.username){
 		console.log("import failed");
-
-		options.channels = ["jhost94"];
-		options.identity.username = "princesspotato_bot";
-		options.identity.password = "611w4kmblmhoebf483dkm29zwv4pax";
 	}
-
+*/
 	client.connect();
 
 client.on('message', (channel, tags, message, self) => {
 	// Ignore echoed messages.
 	if(self) return;
 
-	if(message.toLowerCase() === '!rb') {
+	var command = message.toLowerCase().split(" ");
+	if(command[0] === '!rb') {
         // "@alca, heya!"
-        client.say(channel, `@${tags.username}, heya!`);
+		//client.say(channel, `@${tags.username}, heya!`);
+		if(commands.hasOwnProperty(command[1])){
+			commands[command[1]](channel, tags, command[2]);
+		} else {
+			client.say(channel, `@${tags.username} thats an invalid command. Use ${baseCommand} commands to get a list of all commands - WIP`)
+		}
 	}
-	if(message.toLowerCase() === "!k") {
-		testCount++;
-		client.say(channel, `Your death count is ${testCount}`);
-	}
+
 });
+
+//Command functionality
+
+function bitjs(channel, tags){
+	client.say(channel, `@${tags.username} sup bitjs`);
+}
+
+function test(channel){
+	client.say(channel, `This is a test`);
+}
+
+function cmd(channel) {
+	client.say(channel, `The full list of commands: ${Object.keys(commands)}`);
+}
+
+function setTitleName(channel, tags, message) {
+	renderTitleName(message);
+	client.say(channel, "Name changed to " + message);
+}
+
+function setTitleValue(channel, tags, message) {
+	renderTitleValue(message);
+	client.say(channel, "Title value set to " + message);
+}

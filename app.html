@@ -10,8 +10,31 @@
     <body id="menu">
         <script>
 
+            function renderTitleName(name){
+                document.getElementById("propertyName").innerText = name;
+            }
+
+            function renderTitleValue(value){
+                document.getElementById("propertyValue").innerText = value;
+            }
+
         </script>
-        <div id="gameName"><nav id="propertyName">Test &nbsp;</nav><section id="propertyValue">&nbsp;Num</section></div>
+
+
+        <table id="gameName">
+            <tr>
+            <td id="propertyName">
+                Test
+            </td>
+            <td>
+                &nbsp;
+            </td>
+            
+            <td id="propertyValue">
+                Num
+            </td>
+            </tr>>
+        </table>
 
     </body>
 
