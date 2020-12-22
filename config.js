@@ -1,5 +1,5 @@
 //The bot twitch ID/name
-const botName = "princesspotato_bot";
+const botName = "";
 
 
 //The channel name where you want the bot to listen
