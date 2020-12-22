@@ -714,4 +714,4 @@ MigrationBackup/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,emacs,intellij,intellij+all,intellij+iml,linux,archlinuxpackages,visualstudio,visualstudiocode
 # Personal files to ignore
-config.js
+config*
