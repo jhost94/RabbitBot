@@ -3,19 +3,29 @@
         <link rel="stylesheet" type="text/css" href="rabbitbot.css"/>
         <script src="./script/tmi.min.js"></script>
         <script src="./config.js"></script>
+        <script src="./src/deathconter/DeathCounter.js"></script>
         <script src="./src/app.js"></script>
     </head>
 
 
     <body id="menu">
         <script>
-
+            const fontList = ["CenturyGothic", "CenturyGothicBold", "ChristmasFlake", "ChristmasStar"];
+            
+            //Change the head values
             function renderTitleName(name){
                 document.getElementById("propertyName").innerText = name;
             }
 
             function renderTitleValue(value){
                 document.getElementById("propertyValue").innerText = value;
+            }
+            
+            //Test
+            function setFont(font){
+                if (fontList.includes(font)){
+                    document.getElementById("gameName").style.fontFamily = font;
+                }
             }
 
         </script>
@@ -33,7 +43,7 @@
             <td id="propertyValue">
                 Num
             </td>
-            </tr>>
+            </tr>
         </table>
 
     </body>

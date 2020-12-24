@@ -36,3 +36,11 @@ body {
     font-family: "CenturyGothic";
     src: url("font/century-gothic.ttf");
 }
+@font-face {
+    font-family: "ChristmasFlake";
+    src: url("font/MerryChristmasFlake.ttf");
+}
+@font-face {
+    font-family: "ChristmasStar";
+    src: url("font/MerryChristmasStar.ttf");
+}
