@@ -16,18 +16,16 @@ const options = {
 let botConnected = false;
 const client = new tmi.client(options);
 let botStorage = getStoragedBot();
+
 let commands = {
 	bitjs: bitjs,
 	test: test,
 	commands: cmd,
 	setname: setTitleName,
-	setvalue: setTitleValue
+	setvalue: setTitleValue,
+	death: deathCounterCommandCaller
 }
-/*
-	if (!options.identity.username){
-		console.log("import failed");
-	}
-*/
+
 client.connect();
 
 client.on('message', (channel, tags, message, self) => {
@@ -36,15 +34,17 @@ client.on('message', (channel, tags, message, self) => {
 	if(self) return;
 
 	var command = message.toLowerCase().split(" ");
+	var cmdArray = command.slice(2);
 	if(command[0] === '!rb') {
 		if(!botConnected){
 			connectBot(channel);
 		}
 		if(commands.hasOwnProperty(command[1])){
-			commands[command[1]](channel, tags, command[2]);
+			commands[command[1]](channel, tags, cmdArray);
 		} else if (command.length > 1){
 			client.say(channel, `@${tags.username} thats an invalid command. Use ${baseCommand} commands to get a list of all commands - WIP`)
 		}
+		saveToLocalStorage(botStorage);
 	}
 
 });
@@ -72,10 +72,12 @@ function test(channel, tags, command){
 	saveToLocalStorage(botStorage);
 	renderTitleValue(botStorage.test);
 	client.say(channel, "Test counter: " + botStorage.test);
-	if (command){
-		setFont(command);
-	}
 }
+
+
+/**
+ * Commands Functionality
+ */
 
 //Send the list of commands
 function cmd(channel) {
@@ -84,15 +86,25 @@ function cmd(channel) {
 
 //Change the Title Name an Value
 function setTitleName(channel, tags, message) {
-	renderTitleName(message);
-	client.say(channel, "Name changed to " + message);
+	renderTitleName(message[0]);
+	client.say(channel, "Name changed to " + message[0]);
 }
 
 function setTitleValue(channel, tags, message) {
-	renderTitleValue(message);
-	client.say(channel, "Title value set to " + message);
+	renderTitleValue(message[0]);
+	client.say(channel, "Title value set to " + message[0]);
 }
 
+//DeathCounter
+function deathCounterCommandCaller(channel, tags, message){
+	checkDeathCounter();
+	if(message.length !== 0){
+		if (deathCounterCommands.hasOwnProperty(message[0])){
+			deathCounterCommands[message[0]](channel, tags, message.slice(1));
+			client.say(channel, `${channel.slice(1)} has died ${botStorage.deathCounter} times.`);
+		}
+	}
+}
 
 //Wire the bot to the channel
 function connectBot(channel){
