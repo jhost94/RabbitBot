@@ -18,12 +18,13 @@ const client = new tmi.client(options);
 let botStorage = getStoragedBot();
 
 let commands = {
-	bitjs: bitjs,
-	test: test,
+	//bitjs: bitjs,
+	//test: test,
 	commands: cmd,
-	setname: setTitleName,
-	setvalue: setTitleValue,
-	death: deathCounterCommandCaller
+	//setname: setTitleName,
+	//setvalue: setTitleValue,
+	death: deathCounterCommandCaller,
+    setgame: showGameName   //Temp solution
 }
 
 client.connect();
@@ -36,9 +37,10 @@ client.on('message', (channel, tags, message, self) => {
 	var command = message.toLowerCase().split(" ");
 	var cmdArray = command.slice(2);
 	if(command[0] === '!rb') {
+		/*
 		if(!botConnected){
 			connectBot(channel);
-		}
+		}*/
 		if(commands.hasOwnProperty(command[1])){
 			commands[command[1]](channel, tags, cmdArray);
 		} else if (command.length > 1){
