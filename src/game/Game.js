@@ -1,4 +1,3 @@
-let gameList = [];
 
 function addGame(game){
     if (gameInList(game)) {
