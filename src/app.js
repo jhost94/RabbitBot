@@ -23,12 +23,10 @@ let commands = {
 	//setname: commandFunctionality.setTitleName,
 	//setvalue: commandFunctionality.setTitleValue,
 	death: commandFunctionality.deathCounterCommandCaller,
-	setgame: showGameName   //Temp solution
+	game: commandFunctionality.gameCommandCaller
 }
 
 client.connect();
-
-commandFunctionality.connectBot();
 
 client.on('message', (channel, tags, message, self) => {
 
@@ -52,8 +50,6 @@ client.on('message', (channel, tags, message, self) => {
  * Command functionality
 */
 function mainCommandModule() {
-	let currentGame;
-
 	return {
 		//Tests
 		bitjs: function bitjs(channel, tags, message) {
@@ -90,21 +86,26 @@ function mainCommandModule() {
 		},
 		//DeathCounter
 		deathCounterCommandCaller: function deathCounterCommandCaller(channel, tags, message) {
-			checkDeathCounter();
 			if (message.length !== 0) {
 				if (deathCounterCommands.hasOwnProperty(message[0])) {
 					deathCounterCommands[message[0]](channel, tags, message.slice(1));
-					client.say(channel, `${channel.slice(1)} has died ${botStorage.deathCounter} times.`);
+					client.say(channel, `${channel.slice(1)} has died ${botStorage.currentGame.deathCounter} times.`);
+				}
+			}
+		},
+		//Game
+		gameCommandCaller: function gameCommandCaller (channel, tags, message){
+			if (message.length !== 0) {
+				if (gameCommands.hasOwnProperty(message[0])){
+					gameCommands[message[0]](channel, tags, message.slice(1));
 				}
 			}
 		},
 		//Wire the bot to the channel
 		connectBot: function connectBot() {
-			if (botStorage.currentGame) {
-				renderTitleName(botStorage.currentGame);
-				if (botStorage[botStorage.currentGame].deathCounter) {
-					renderTitleValue(botStorage[botStorage.currentGame].deathCounter);
-				}
+			if (botStorage.currentGame.name) {
+				renderTitleName(botStorage.currentGame.name);
+				renderTitleValue(botStorage.currentGame.deathCounter);
 			}
 		}
 	}
@@ -115,7 +116,7 @@ function mainCommandModule() {
 function getStoragedBot() {
 	return localStorage.getItem("rabbot") !== null ? JSON.parse(localStorage.getItem("rabbot")) :
 		{
-			currentGame: "",
+			currentGame: {},
 			games: {},
 			subs: 0, //For now will check only the number of subs
 			folowers: 0 //For now will check only the number of folowers
