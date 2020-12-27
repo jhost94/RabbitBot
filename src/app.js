@@ -17,7 +17,7 @@ const client = new tmi.client(options);
 let botStorage = getStoragedBot();
 let commandFunctionality = mainCommandModule();
 let commands = {
-	bitjs: commandFunctionality.bitjs,
+	//bitjs: commandFunctionality.bitjs,
 	//test: test,
 	commands: commandFunctionality.cmd,
 	//setname: commandFunctionality.setTitleName,

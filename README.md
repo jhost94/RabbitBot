@@ -2,12 +2,11 @@
 A starting project, a twitch bot to learn and to make personified bot.
 
 # Fetures
-0.3.0
 Basic death counter presented on screen and chat.
 Persistence, saves every change on the OBS local storage.
+Game list that implements the death counter, and possibility for other future implementations.
 
 # Future features
-- Add a "Games" option, where death counter will be implemented into, along side other possible options.
 - Command restriction, for certain commands only moderators or channel owner can use, and not everyone.
 - Full customization, the streamer has ALL the power. Use a way to have a user-friendly option management, and changes updated live.
 - More on screen elements, like subs alert, donations, etc. AND BETTER.
@@ -26,9 +25,13 @@ To run the plugin on OBS:
 # Change log
 0.3.0 - Initial release.
 
+0.4.0
+Added a game list feature, that implements the death counter, and possibility for other future implementations´
+
 # Commands
 !rb commands - WIP
-!rb setgame <Game Name>
+!rb game add <Game Name>
+!rb game change <Game Name>
 !rb death
 !rb death add
 !rb death set <number>
