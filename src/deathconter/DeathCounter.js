@@ -33,10 +33,8 @@ function deathCounterCommandModule() {
         set: function set(channel, tags, n) {
             checkDeathCounter();
             n = parseInt(n[0], 10);
-            if (typeof n === "number") {
+            if (!isNaN(n)) {
                 botStorage.currentGame.deathCounter = n;
-            } else {
-                console.log("n is not a number, n is " + typeof n);
             }
             showDeathCounter();
         } 

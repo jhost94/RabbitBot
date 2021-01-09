@@ -33,9 +33,9 @@ client.on('message', (channel, tags, message, self) => {
 	// Ignore echoed messages.
 	if (self) return;
 
-	var command = message.toLowerCase().split(" ");
+	var command = message.split(" ");
 	var cmdArray = command.slice(2);
-	if (command[0] === '!rb') {
+	if (command[0].toLowerCase() === '!rb') {
 		if (commands.hasOwnProperty(command[1])) {
 			commands[command[1]](channel, tags, cmdArray);
 		} else if (command.length > 1) {
@@ -90,6 +90,8 @@ function mainCommandModule() {
 				if (deathCounterCommands.hasOwnProperty(message[0])) {
 					deathCounterCommands[message[0]](channel, tags, message.slice(1));
 					client.say(channel, `${channel.slice(1)} has died ${botStorage.currentGame.deathCounter} times.`);
+				} else {
+					client.say(channel, `@${tags.username} that command is invalid.`);
 				}
 			}
 		},
@@ -98,6 +100,8 @@ function mainCommandModule() {
 			if (message.length !== 0) {
 				if (gameCommands.hasOwnProperty(message[0])){
 					gameCommands[message[0]](channel, tags, message.slice(1));
+				} else {
+					client.say(channel, `@${tags.username} that command is invalid.`)
 				}
 			}
 		},
