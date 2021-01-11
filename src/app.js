@@ -1,3 +1,5 @@
+var botConf;
+
 const options = {
 	options: {
 		debug: true
@@ -7,10 +9,10 @@ const options = {
 		reconnect: true
 	},
 	identity: {
-		username: botName,
-		password: oauth
+		username: null,
+		password: null
 	},
-	channels: channel
+	channels: null
 }
 
 const client = new tmi.client(options);
@@ -26,25 +28,28 @@ let commands = {
 	game: commandFunctionality.gameCommandCaller
 }
 
-client.connect();
 
-client.on('message', (channel, tags, message, self) => {
+function startUp() {
+	client.connect();
 
-	// Ignore echoed messages.
-	if (self) return;
+	client.on('message', (channel, tags, message, self) => {
 
-	var command = message.split(" ");
-	var cmdArray = command.slice(2);
-	if (command[0].toLowerCase() === '!rb') {
-		if (commands.hasOwnProperty(command[1])) {
-			commands[command[1]](channel, tags, cmdArray);
-		} else if (command.length > 1) {
-			client.say(channel, `@${tags.username} thats an invalid command. Use ${baseCommand} commands to get a list of all commands - WIP`)
+		// Ignore echoed messages.
+		if (self) return;
+
+		var command = message.split(" ");
+		var cmdArray = command.slice(2);
+		if (command[0].toLowerCase() === '!rb') {
+			if (commands.hasOwnProperty(command[1])) {
+				commands[command[1]](channel, tags, cmdArray);
+			} else if (command.length > 1) {
+				client.say(channel, `@${tags.username} thats an invalid command. Use ${baseCommand} commands to get a list of all commands - WIP`)
+			}
+			saveToLocalStorage(botStorage);
 		}
-		saveToLocalStorage(botStorage);
-	}
 
-});
+	});
+}
 
 /**
  * Command functionality
@@ -96,9 +101,9 @@ function mainCommandModule() {
 			}
 		},
 		//Game
-		gameCommandCaller: function gameCommandCaller (channel, tags, message){
+		gameCommandCaller: function gameCommandCaller(channel, tags, message) {
 			if (message.length !== 0) {
-				if (gameCommands.hasOwnProperty(message[0])){
+				if (gameCommands.hasOwnProperty(message[0])) {
 					gameCommands[message[0]](channel, tags, message.slice(1));
 				} else {
 					client.say(channel, `@${tags.username} that command is invalid.`)
@@ -130,3 +135,24 @@ function getStoragedBot() {
 function saveToLocalStorage(bot) {
 	localStorage.setItem("rabbot", JSON.stringify(bot));
 }
+
+
+function getConf(conf) {
+	var request = new XMLHttpRequest();
+	request.responseType = "json"
+	request.open("GET", conf, true);
+	request.send(null);
+	request.onload = function (event) {
+		botConf = event.currentTarget.response;
+		setupConfig();
+		startUp();
+	}
+}
+
+function setupConfig(){
+	options.identity.username = botConf.botSettings.username;
+	options.identity.password = botConf.botSettings.password;
+	options.channels = botConf.accountSettings.channel;
+}
+
+getConf("./config.json");
