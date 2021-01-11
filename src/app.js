@@ -116,6 +116,7 @@ function mainCommandModule() {
 				renderTitleName(botStorage.currentGame.name);
 				renderTitleValue(botStorage.currentGame.deathCounter);
 			}
+			checkFile(getConf("./config.json"));
 		}
 	}
 
@@ -144,15 +145,23 @@ function getConf(conf) {
 	request.send(null);
 	request.onload = function (event) {
 		botConf = event.currentTarget.response;
-		setupConfig();
-		startUp();
+		return true;
 	}
 }
 
-function setupConfig(){
+function setupConfig() {
 	options.identity.username = botConf.botSettings.username;
 	options.identity.password = botConf.botSettings.password;
 	options.channels = botConf.accountSettings.channel;
 }
 
-getConf("./config.json");
+function checkFile(status) {
+	if (status) {
+		setupConfig();
+		startUp();
+	} else {
+		console.error("Config file not found!");
+		renderTitleName("Config file not loaded");
+		renderTitleValue("");
+	}
+}

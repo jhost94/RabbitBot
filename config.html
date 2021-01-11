@@ -1,0 +1,47 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        <form>
+            <label id="channelName">Channel name:</label>
+            <input type="text" id="channelName">
+            
+            <label id="botName">Bot name:</label>
+            <input type="text" id="botName">
+
+            <label id="rabbotCommand">Rabbot base command(default: !rb):</label>
+            <input type="text" id="rabbotCommand">
+
+            <button id="submitBase">Save</button>
+        </form>
+
+
+        <script>
+            const CONFIG_URL = './config.json';
+            const CORS_CONFIG = {
+                method: "post",
+                headers: { 
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }
+
+            var eventList = eventModule();
+
+            document.getElementById("submitBase").addEventListener("click", fetchConfig);
+            
+
+
+            function fetchConfig(){
+                event.preventDefault();
+                saveAs(new Blob([document.getElementById("channelName")]),{type: "application/json; charset=UTF-8"}, "config.json");
+            }
+            function eventModule(){
+
+                return {
+
+                }
+            }
+        </script>
+    </body>
+</html>
