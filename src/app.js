@@ -1,4 +1,5 @@
 var botConf;
+var botReferenceCommand;
 
 const options = {
 	options: {
@@ -32,6 +33,7 @@ let commands = {
 function botMaintenanceModule() {
 	return {
 		startUp: function () {
+			botReferenceCommand = botConf.accountSettings.command;
 			client.connect();
 
 			client.on('message', (channel, tags, message, self) => {
@@ -41,7 +43,7 @@ function botMaintenanceModule() {
 
 				var command = message.split(" ");
 				var cmdArray = command.slice(2);
-				if (command[0].toLowerCase() === '!rb') {
+				if (command[0].toLowerCase() === botReferenceCommand) {
 					if (commands.hasOwnProperty(command[1])) {
 						commands[command[1]](channel, tags, cmdArray);
 					} else if (command.length > 1) {

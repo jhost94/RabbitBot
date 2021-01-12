@@ -4,7 +4,8 @@ let gameCommands = {
     add: gameCommandFunctionality.addGame,
     change: gameCommandFunctionality.changeGame,
     delete: gameCommandFunctionality.deleteGame,
-    list: gameCommandFunctionality.listGames
+    list: gameCommandFunctionality.listGames,
+    rename: gameCommandFunctionality.changeGameName
 }
 
 function gameCommandModule() {
@@ -14,16 +15,19 @@ function gameCommandModule() {
             deathCounter: 0
         };
     }
-    function changeGame(channel, tags, game) {
+    function changeGame(game) {
         if (typeof game == "object"){
             game = game.join(" ");
         }
+        console.log(game);
         if (gameExists(game)) {
             botStorage.currentGame = botStorage.games[searchGameByName(game)];
             //Temp
             renderTitleName(botStorage.currentGame.name);
             renderTitleValue(botStorage.currentGame.deathCounter);
+            return true;
         }
+        return false;
     }
     function searchGameByName(game){
         for(let i = 0; i < botStorage.gameID; i++){
@@ -49,10 +53,17 @@ function gameCommandModule() {
             if (game !== null || game !== undefined) {
                 botStorage.games[botStorage.gameID] = emptyGame(game);
                 botStorage.gameID++;
-                changeGame(channel, tags, game);
+                changeGame(game);
             }
         },
-        changeGame: changeGame,
+        changeGame: function (channel, tags, game){
+            game = game.join(" ").trim();
+            if(changeGame(game)){
+                client.say(channel, `Game changed to ${game}`)
+            } else {
+                client.say(channel, `Game not found, please type !rb game list to get get the list of all games.`)
+            }
+        },
         deleteGame: function(channel, tags, game){
             game = game.join(" ");
             if(gameExists(game)){
@@ -73,6 +84,22 @@ function gameCommandModule() {
         listGames: function (channel, tags, game){
             var gameList = listGames().map(ele => botStorage.games[ele].name);
             client.say(channel, `Games currently in the game list: ${gameList}`);
+        },
+        changeGameName: function (channel, tags, name){
+            var oldGameName = botStorage.currentGame.name;
+            name = name.join(" ").split(",");
+            name[0] = name[0].trim();
+            name[1] = name[1].trim();
+            if(gameExists(name[0])){
+                botStorage.games[searchGameByName(name[0])].name = name[1];
+                console.log(`<${name[0]}:${oldGameName}>${name[1]}`);
+                if(oldGameName === name[0]){
+                    changeGame(channel, tags, name[1]);
+                }
+                client.say(channel, `${name[0]} changed to ${name[1]}`);
+            } else {
+                client.say(channel, `Game not found.`);
+            }
         }
     }
 }
