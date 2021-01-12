@@ -18,6 +18,7 @@ const options = {
 const client = new tmi.client(options);
 let botStorage = getStoragedBot();
 let commandFunctionality = mainCommandModule();
+let botMaintenance = botMaintenanceModule();
 let commands = {
 	//bitjs: commandFunctionality.bitjs,
 	//test: test,
@@ -28,27 +29,69 @@ let commands = {
 	game: commandFunctionality.gameCommandCaller
 }
 
+function botMaintenanceModule() {
+	return {
+		startUp: function () {
+			client.connect();
 
-function startUp() {
-	client.connect();
+			client.on('message', (channel, tags, message, self) => {
 
-	client.on('message', (channel, tags, message, self) => {
+				// Ignore echoed messages.
+				if (self) return;
 
-		// Ignore echoed messages.
-		if (self) return;
+				var command = message.split(" ");
+				var cmdArray = command.slice(2);
+				if (command[0].toLowerCase() === '!rb') {
+					if (commands.hasOwnProperty(command[1])) {
+						commands[command[1]](channel, tags, cmdArray);
+					} else if (command.length > 1) {
+						client.say(channel, `@${tags.username} thats an invalid command. Use ${baseCommand} commands to get a list of all commands - WIP`)
+					}
+					this.saveToLocalStorage(botStorage);
+				}
 
-		var command = message.split(" ");
-		var cmdArray = command.slice(2);
-		if (command[0].toLowerCase() === '!rb') {
-			if (commands.hasOwnProperty(command[1])) {
-				commands[command[1]](channel, tags, cmdArray);
-			} else if (command.length > 1) {
-				client.say(channel, `@${tags.username} thats an invalid command. Use ${baseCommand} commands to get a list of all commands - WIP`)
+			});
+		},
+		//Storage management
+		saveToLocalStorage: function (bot) {
+			localStorage.setItem("rabbot", JSON.stringify(bot));
+		},
+		getConf: function (conf) {
+			var request = new XMLHttpRequest();
+			request.responseType = "json"
+			request.open("GET", conf, true);
+			request.send(null);
+			request.onload = function (event) {
+				botConf = event.currentTarget.response;
 			}
-			saveToLocalStorage(botStorage);
+		},
+		setupConfig: function () {
+			options.identity.username = botConf.botSettings.username;
+			options.identity.password = botConf.botSettings.password;
+			options.channels = botConf.accountSettings.channel;
+		},
+		checkFile: function() {
+			setTimeout(() => {
+				if (botConf !== {} && botConf !== undefined && botConf !== null) {
+					this.setupConfig();
+					this.startUp();
+				} else {
+					console.error("Config file not found!");
+					renderTitleName("Config file not loaded");
+					renderTitleValue("");
+				}
+			}, 0)
+		},
+		//Wire the bot to the channel
+		connectBot: function () {
+			if (botStorage.currentGame.name) {
+				renderTitleName(botStorage.currentGame.name);
+				renderTitleValue(botStorage.currentGame.deathCounter);
+			}
+			botMaintenance.getConf("./config.json");
+			botMaintenance.checkFile();
 		}
-
-	});
+	}
 }
 
 /**
@@ -57,11 +100,11 @@ function startUp() {
 function mainCommandModule() {
 	return {
 		//Tests
-		bitjs: function bitjs(channel, tags, message) {
+		bitjs: function (channel, tags, message) {
 			client.action(channel, message.join(" "));
 			//client.say(channel, `/me sup bitjs`);
 		},
-		test: function test(channel, tags, command) {
+		test: function (channel, tags, command) {
 			if (tags.badges.broadcaster) {
 				client.say(channel, `@${tags.username} yes lord?`)
 			} else {
@@ -77,20 +120,20 @@ function mainCommandModule() {
 			client.say(channel, "Test counter: " + botStorage.test);
 		},
 		//Send the list of commands
-		cmd: function cmd(channel) {
+		cmd: function (channel) {
 			client.say(channel, `The full list of commands: ${Object.keys(commands)}`);
 		},
 		//Change the Title Name and Value
-		setTitleName: function setTitleName(channel, tags, message) {
+		setTitleName: function (channel, tags, message) {
 			renderTitleName(message[0]);
 			client.say(channel, "Name changed to " + message[0]);
 		},
-		setTitleValue: function setTitleValue(channel, tags, message) {
+		setTitleValue: function (channel, tags, message) {
 			renderTitleValue(message[0]);
 			client.say(channel, "Title value set to " + message[0]);
 		},
 		//DeathCounter
-		deathCounterCommandCaller: function deathCounterCommandCaller(channel, tags, message) {
+		deathCounterCommandCaller: function (channel, tags, message) {
 			if (message.length !== 0) {
 				if (deathCounterCommands.hasOwnProperty(message[0])) {
 					deathCounterCommands[message[0]](channel, tags, message.slice(1));
@@ -101,7 +144,7 @@ function mainCommandModule() {
 			}
 		},
 		//Game
-		gameCommandCaller: function gameCommandCaller(channel, tags, message) {
+		gameCommandCaller: function (channel, tags, message) {
 			if (message.length !== 0) {
 				if (gameCommands.hasOwnProperty(message[0])) {
 					gameCommands[message[0]](channel, tags, message.slice(1));
@@ -109,59 +152,21 @@ function mainCommandModule() {
 					client.say(channel, `@${tags.username} that command is invalid.`)
 				}
 			}
-		},
-		//Wire the bot to the channel
-		connectBot: function connectBot() {
-			if (botStorage.currentGame.name) {
-				renderTitleName(botStorage.currentGame.name);
-				renderTitleValue(botStorage.currentGame.deathCounter);
-			}
-			getConf("./config.json");
-			setTimeout(checkFile,0);
 		}
 	}
 
 }
 
-//Storage management
+/**
+ * Get/create the storage for the bot in LocalStorage
+ */
 function getStoragedBot() {
 	return localStorage.getItem("rabbot") !== null ? JSON.parse(localStorage.getItem("rabbot")) :
 		{
 			currentGame: {},
 			games: {},
 			subs: 0, //For now will check only the number of subs
-			folowers: 0 //For now will check only the number of folowers
+			followers: 0, //For now will check only the number of folowers
+			gameID: 0
 		};
-}
-
-function saveToLocalStorage(bot) {
-	localStorage.setItem("rabbot", JSON.stringify(bot));
-}
-
-
-function getConf(conf) {
-	var request = new XMLHttpRequest();
-	request.responseType = "json"
-	request.open("GET", conf, true);
-	request.send(null);
-	request.onload = function (event) {
-		botConf = event.currentTarget.response;
-	}
-}
-
-function setupConfig() {
-	options.identity.username = botConf.botSettings.username;
-	options.identity.password = botConf.botSettings.password;
-	options.channels = botConf.accountSettings.channel;
-}
-
-async function checkFile() {
-	if (botConf !== {} && botConf !== undefined && botConf !== null) {
-		setupConfig();
-		startUp();
-	} else {
-		console.error("Config file not found!");
-		renderTitleName("Config file not loaded");
-		renderTitleValue("");
-	}
 }

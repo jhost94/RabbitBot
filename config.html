@@ -19,28 +19,33 @@
 
         <script>
             const CONFIG_URL = './config.json';
-            const CORS_CONFIG = {
-                method: "post",
-                headers: { 
-                    "Content-type": "application/json; charset=UTF-8"
-                }
-            }
-
-            var eventList = eventModule();
+            let configFile;
+            let loaded = false;
 
             document.getElementById("submitBase").addEventListener("click", fetchConfig);
             
-
-
             function fetchConfig(){
                 event.preventDefault();
-                saveAs(new Blob([document.getElementById("channelName")]),{type: "application/json; charset=UTF-8"}, "config.json");
-            }
-            function eventModule(){
-
-                return {
-
+                var request = new XMLHttpRequest();
+                request.responseType = "json";
+                request.open("GET", CONFIG_URL, true);
+                request.send(null);
+                request.onload = function(event){
+                    configFile = event.currentTarget.response;
+                    loaded = true;
                 }
+            }
+
+            function fileCheck(){
+                if(loaded){
+                    loadFile();
+                } else {
+                    createFile();
+                }
+            }
+
+            function loadFile(){
+
             }
         </script>
     </body>
