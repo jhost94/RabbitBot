@@ -12,26 +12,32 @@ Game list that implements the death counter, and possibility for other future im
 - More on screen elements, like subs alert, donations, etc. AND BETTER.
 
 # Instructions
-In order to get started configure config.js with the instructions provided.
 To run the plugin on OBS:
 1 - Download bot and extract to a folder.
-2 - Make sure you have OBS opend.
-3 - Under "Sources" click the "+" button.
-4 - Select "Browser" and "Create new" option.
-5 - Select the "Local fole" box, click "Browse" and find "app.js" from where this bot's folder is located.
-6 - Select "Shutdown source when not visible" and "Refresh browser when scene becomes active" for better performance. --Optional--
-7 - Click "OK".
+2 - Configure config.json with the necessary fields.
+3 - Make sure you have OBS opend.
+4 - Under "Sources" click the "+" button.
+5 - Select "Browser" and "Create new" option.
+6 - Select the "Local fole" box, click "Browse" and find "app.js" from where this bot's folder is located.
+7 - Select "Shutdown source when not visible" and "Refresh browser when scene becomes active" for better performance. --Optional--
+8 - Click "OK".
 
 # Change log
 0.3.0 - Initial release.
 
 0.4.0
-Added a game list feature, that implements the death counter, and possibility for other future implementations´
+Added a game list feature, that implements the death counter, and possibility for other future implementations.
+
+0.5.1
+Added Change game name and remove game options, improved game list and is now less propitious to errors.
+Fixes some bugs and improved the game and death counter efficiency.
 
 # Commands
 !rb commands - WIP
 !rb game add <Game Name>
 !rb game change <Game Name>
+!rb game rename <Old Game Name>, <New Game Name>
+!rb game delete <Game Name>
 !rb death
 !rb death add
 !rb death set <number>
