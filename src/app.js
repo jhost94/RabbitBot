@@ -58,20 +58,6 @@ function botMaintenanceModule() {
 		saveToLocalStorage: function (bot) {
 			localStorage.setItem("rabbot", JSON.stringify(bot));
 		},
-		getConf: function (conf) {
-			var request = new XMLHttpRequest();
-			request.responseType = "json"
-			request.open("GET", conf, true);
-			request.send(null);
-			request.onload = function (event) {
-				botConf = event.currentTarget.response;
-			}
-		},
-		setupConfig: function () {
-			options.identity.username = botConf.botSettings.username;
-			options.identity.password = botConf.botSettings.password;
-			options.channels = botConf.accountSettings.channel;
-		},
 		checkFile: function() {
 			setTimeout(() => {
 				if (botConf !== {} && botConf !== undefined && botConf !== null) {
@@ -84,6 +70,23 @@ function botMaintenanceModule() {
 				}
 			}, 0)
 		},
+		getConf: function (conf) {
+			let that = this;
+			var request = new XMLHttpRequest();
+			request.responseType = "json"
+			request.open("GET", conf, true);
+			request.send(null);
+			request.onload = function (event) {
+				botConf = event.currentTarget.response;
+				that.checkFile();
+			}
+		},
+		setupConfig: function () {
+			options.identity.username = botConf.botSettings.username;
+			options.identity.password = botConf.botSettings.password;
+			options.channels = botConf.accountSettings.channel;
+		},
+		
 		//Wire the bot to the channel
 		connectBot: function () {
 			if (botStorage.currentGame.name) {
@@ -91,7 +94,7 @@ function botMaintenanceModule() {
 				renderTitleValue(botStorage.currentGame.deathCounter);
 			}
 			botMaintenance.getConf("./config.json");
-			botMaintenance.checkFile();
+			//botMaintenance.checkFile();
 		}
 	}
 }
