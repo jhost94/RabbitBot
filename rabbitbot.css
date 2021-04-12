@@ -1,33 +1,35 @@
-*{
-    box-sizing: border-box;
-}
 
 body {
     overflow: hidden;
-    width: 100%;
-    height: auto;
 }
 
 #menu {
     font-family: "CenturyGothicBold";
-    display: inline-block;
-}
-
-#gameName {
-    color: darkred;
-    display: inline-block;
+    display: block;
     font-size: 100px;
-    width: 100%;
-    height: 200%;
+    color: darkred;
 }
 
-#propertyName {
-    display: inline-block;
-}
 
-#propertyValue {
-    display: inline-block;
+#keyCol{
     text-align: right;
+}
+
+#valueCol{
+    text-align: left;
+}
+
+.col{
+    display: inline-block;
+}
+
+.item{
+    display: block;
+}
+
+.seperator{
+    display: inline-block;
+    width: 1%;
 }
 
 @font-face {

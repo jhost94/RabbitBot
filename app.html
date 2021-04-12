@@ -1,6 +1,11 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" type="text/css" href="rabbitbot.css" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="./script/tmi.min.js"></script>
@@ -9,30 +14,55 @@
     <script src="./src/game/Game.js"></script>
 </head>
 
-<body id="menu">
+<body>
 
-    <table id="gameName">
-        <tr>
-            <td id="propertyName">
+    <div id="menu">
+
+        <div id="keyCol" class="col">
+
+            <div id="title" class="item">
                 Game
-            </td>
-            <td>
-                &nbsp;
-            </td>
+            </div>
 
-            <td id="propertyValue">
+            <div id="deathsT" class="item">
+                Total deaths
+            </div>
+
+            <div id="deathsB">
+                Boss
+            </div>
+
+        </div>
+
+        <span class="seperator">
+
+        </span>
+
+        <div id="valueCol" class="col">
+
+            <div id="gameVal" class="item">
+                Name
+            </div>
+
+            <div id="deathsTVal" class="item">
                 0
-            </td>
-        </tr>
-    </table>
+            </div>
+
+            <div id="deathsBVal">
+                0
+            </div>
+
+        </div>
+
+    </div>
 
     <script>
         const fontList = ["CenturyGothic", "CenturyGothicBold", "ChristmasFlake", "ChristmasStar"];
-        
+
         botMaintenance.connectBot();
         //Change the head values
         function renderTitleName(name) {
-            document.getElementById("propertyName").innerText = name;
+            document.getElementById("gameName").innerText = name;
         }
 
         function renderTitleValue(value) {
