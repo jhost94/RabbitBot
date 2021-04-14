@@ -12,6 +12,8 @@ function gameCommandModule() {
     function emptyGame(n) {
         return {
             name: n,
+            bosses: [],
+            currentBoss: null,
             deathCounter: 0
         };
     }
@@ -23,8 +25,8 @@ function gameCommandModule() {
         if (gameExists(game)) {
             botStorage.currentGame = botStorage.games[searchGameByName(game)];
             //Temp
-            renderTitleName(botStorage.currentGame.name);
-            renderTitleValue(botStorage.currentGame.deathCounter);
+            renderGameName(botStorage.currentGame.name);
+            renderTotalDValue(botStorage.currentGame.deathCounter);
             return true;
         }
         return false;
@@ -38,7 +40,7 @@ function gameCommandModule() {
         return -1;
     }
     function gameExists(game){
-        return searchGameByName(game) !== -1 ? true : false;
+        return searchGameByName(game) !== -1;
     }
     function listGames(){
         return(Object.getOwnPropertyNames(botStorage.games));
@@ -74,8 +76,8 @@ function gameCommandModule() {
                 if(lastGameIndex !== undefined){
                     changeGame(channel, tags, botStorage.games[lastGameIndex].name);
                 } else {
-                    renderTitleName("Game");
-                    renderTitleValue(0);
+                    renderGameName("Game");
+                    renderTotalDValue(0);
                 }
             } else {
                 client.say(channel, `No games were found with that name, please type !rb game list to get the list of all the games.`)

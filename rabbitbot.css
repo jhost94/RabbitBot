@@ -6,7 +6,7 @@ body {
 #menu {
     font-family: "CenturyGothicBold";
     display: block;
-    font-size: 100px;
+    font-size: 80px;
     color: darkred;
 }
 
@@ -30,6 +30,19 @@ body {
 .seperator{
     display: inline-block;
     width: 1%;
+}
+
+
+.showDiv{
+    opacity: 100;
+    left: 5px;
+    transition: all 0.5s linear;
+}
+
+.hideDiv{
+    opacity: 0;
+    left: 5px;
+    transition: all 0.5s linear;
 }
 
 @font-face {

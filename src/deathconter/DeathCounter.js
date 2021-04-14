@@ -8,8 +8,8 @@ let deathCounterCommands = {
 //DeathCounter commands
 function deathCounterCommandModule() {
     function showDeathCounter() {
-        renderTitleValue(botStorage.currentGame.deathCounter);
-        renderTitleName(botStorage.currentGame.name);
+        renderTotalDValue(botStorage.currentGame.deathCounter);
+        renderGameName(botStorage.currentGame.name);
         //saveCurrentGame();
     }
 

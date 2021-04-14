@@ -12,6 +12,7 @@
     <script src="./src/deathconter/DeathCounter.js"></script>
     <script src="./src/app.js"></script>
     <script src="./src/game/Game.js"></script>
+    <script src="./src/game/boss.js"></script>
 </head>
 
 <body>
@@ -28,7 +29,7 @@
                 Total deaths
             </div>
 
-            <div id="deathsB">
+            <div id="deathsB" class="showDiv">
                 Boss
             </div>
 
@@ -48,7 +49,7 @@
                 0
             </div>
 
-            <div id="deathsBVal">
+            <div id="deathsBVal" class="showDiv">
                 0
             </div>
 
@@ -61,14 +62,18 @@
 
         botMaintenance.connectBot();
         //Change the head values
-        function renderTitleName(name) {
-            document.getElementById("gameName").innerText = name;
+        function renderGameName(name) {
+            document.getElementById("gameVal").innerText = name;
         }
 
-        function renderTitleValue(value) {
-            document.getElementById("propertyValue").innerText = value;
+        function renderTotalDValue(value) {
+            document.getElementById("deathsTVal").innerText = value;
         }
 
+        function renderBossDDValue(name, value) {
+            document.getElementById("deathsB").innerText = name;
+            document.getElementById("deathsBValue").innerText = value;
+        }
         //Test
         function setFont(font) {
             if (fontList.includes(font)) {

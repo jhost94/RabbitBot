@@ -27,7 +27,8 @@ let commands = {
 	//setname: commandFunctionality.setTitleName,
 	//setvalue: commandFunctionality.setTitleValue,
 	death: commandFunctionality.deathCounterCommandCaller,
-	game: commandFunctionality.gameCommandCaller
+	game: commandFunctionality.gameCommandCaller,
+	boss : commandFunctionality.bossCommandCaller
 }
 
 function botMaintenanceModule() {
@@ -90,8 +91,8 @@ function botMaintenanceModule() {
 		//Wire the bot to the channel
 		connectBot: function () {
 			if (botStorage.currentGame.name) {
-				renderTitleName(botStorage.currentGame.name);
-				renderTitleValue(botStorage.currentGame.deathCounter);
+				renderGameName(botStorage.currentGame.name);
+				renderTotalDValue(botStorage.currentGame.deathCounter);
 			}
 			botMaintenance.getConf("./config.json");
 			//botMaintenance.checkFile();
@@ -129,13 +130,13 @@ function mainCommandModule() {
 			client.say(channel, `The full list of commands: ${Object.keys(commands)}`);
 		},
 		//Change the Title Name and Value
-		setTitleName: function (channel, tags, message) {
-			renderTitleName(message[0]);
-			client.say(channel, "Name changed to " + message[0]);
+		setGameName: function (channel, tags, message) {
+			renderGameName(message[0]);
+			client.say(channel, "Game name changed to " + message[0]);
 		},
-		setTitleValue: function (channel, tags, message) {
-			renderTitleValue(message[0]);
-			client.say(channel, "Title value set to " + message[0]);
+		setTotalDeathsValue: function (channel, tags, message) {
+			renderTotalDValue(message[0]);
+			client.say(channel, "Total deaths value set to " + message[0]);
 		},
 		//DeathCounter
 		deathCounterCommandCaller: function (channel, tags, message) {
@@ -153,6 +154,16 @@ function mainCommandModule() {
 			if (message.length !== 0) {
 				if (gameCommands.hasOwnProperty(message[0])) {
 					gameCommands[message[0]](channel, tags, message.slice(1));
+				} else {
+					client.say(channel, `@${tags.username} that command is invalid.`)
+				}
+			}
+		},
+		//Boss
+		bossCommandCaller: function (channel, tags, message) {
+			if (message.length !== 0){
+				if (bossCommands.hasOwnProperty(message[0])){
+					bossCommands[message[0]](channel, tags, message.slice(1));
 				} else {
 					client.say(channel, `@${tags.username} that command is invalid.`)
 				}
