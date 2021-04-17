@@ -48,9 +48,10 @@ function botMaintenanceModule() {
 					if (commands.hasOwnProperty(command[1])) {
 						commands[command[1]](channel, tags, cmdArray);
 					} else if (command.length > 1) {
-						client.say(channel, `@${tags.username} thats an invalid command. Use ${baseCommand} commands to get a list of all commands - WIP`)
+						client.say(channel, `@${tags.username} thats an invalid command. Use ${botConf.accountSettings.command} <${Object.keys(commands)}> commands to get a list of all commands - WIP`)
 					}
 					this.saveToLocalStorage(botStorage);
+					this.quickRefresh();
 				}
 
 			});
@@ -59,6 +60,17 @@ function botMaintenanceModule() {
 		saveToLocalStorage: function (bot) {
 			localStorage.setItem("rabbot", JSON.stringify(bot));
 		},
+		quickRefresh: function(){
+			//NEED FIX
+			renderTotalDValue(botStorage.currentGame.deathCounter);
+
+			if(botStorage.currentGame.currentBoss !== undefined && 
+				botStorage.currentGame.currentBoss.name !== null &&
+				!botStorage.currentGame.currentBoss.defeated){
+				refreshBossRender(botStorage.currentGame.currentBoss.name,
+					botStorage.currentGame.currentBoss.deaths);
+			}
+		},
 		checkFile: function() {
 			setTimeout(() => {
 				if (botConf !== {} && botConf !== undefined && botConf !== null) {
@@ -66,8 +78,9 @@ function botMaintenanceModule() {
 					this.startUp();
 				} else {
 					console.error("Config file not found!");
-					renderTitleName("Config file not loaded");
-					renderTitleValue("");
+					//FIX
+					renderGameName("Config file not loaded");
+					renderTotalDValue("");
 				}
 			}, 0)
 		},
@@ -79,6 +92,7 @@ function botMaintenanceModule() {
 			request.send(null);
 			request.onload = function (event) {
 				botConf = event.currentTarget.response;
+				console.log(botConf);
 				that.checkFile();
 			}
 		},
@@ -93,6 +107,10 @@ function botMaintenanceModule() {
 			if (botStorage.currentGame.name) {
 				renderGameName(botStorage.currentGame.name);
 				renderTotalDValue(botStorage.currentGame.deathCounter);
+
+				if(botStorage.currentGame.showBoss){
+					bossCommands.show()
+				}
 			}
 			botMaintenance.getConf("./config.json");
 			//botMaintenance.checkFile();
@@ -133,10 +151,6 @@ function mainCommandModule() {
 		setGameName: function (channel, tags, message) {
 			renderGameName(message[0]);
 			client.say(channel, "Game name changed to " + message[0]);
-		},
-		setTotalDeathsValue: function (channel, tags, message) {
-			renderTotalDValue(message[0]);
-			client.say(channel, "Total deaths value set to " + message[0]);
 		},
 		//DeathCounter
 		deathCounterCommandCaller: function (channel, tags, message) {

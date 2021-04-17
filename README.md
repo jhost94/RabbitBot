@@ -4,7 +4,7 @@ A starting project, a twitch bot to learn and to make personified bot.
 # Fetures
 Basic death counter presented on screen and chat.
 Persistence, saves every change on the OBS local storage.
-Game list that implements the death counter, and possibility for other future implementations.
+Game list that implements the death counter and a boss list for each game.
 
 # Future features
 - Command restriction, for certain commands only moderators or channel owner can use, and not everyone.
@@ -32,13 +32,30 @@ Added a game list feature, that implements the death counter, and possibility fo
 Added Change game name and remove game options, improved game list and is now less propitious to errors.
 Fixes some bugs and improved the game and death counter efficiency.
 
+0.6.0
+Added new boss commands, fully optional.
+These new commands have all base options, similar to "Game" and a few more.
+Fixed some bugs.
+
 # Commands
 !rb commands - WIP
+
+-->!rb game
 !rb game add <Game Name>
 !rb game change <Game Name>
 !rb game rename <Old Game Name>, <New Game Name>
 !rb game delete <Game Name>
-!rb death
+
+-->!rb boss <Boss name (optional)>
+!rb boss show
+!rb boss hide
+!rb boss add <Boss Name>
+!rb boss change <Boss Name>
+->!rb boss rename <Old Boss Name, New Boss Name>
+->!rb boss delete <Boss Name>
+->!rb boss finish
+
+-->!rb death
 !rb death add
 !rb death set <number>
 

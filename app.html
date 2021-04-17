@@ -29,7 +29,7 @@
                 Total deaths
             </div>
 
-            <div id="deathsB" class="showDiv">
+            <div id="deathsB" class="hideDiv">
                 Boss
             </div>
 
@@ -49,7 +49,7 @@
                 0
             </div>
 
-            <div id="deathsBVal" class="showDiv">
+            <div id="deathsBVal" class="hideDiv">
                 0
             </div>
 
@@ -61,19 +61,55 @@
         const fontList = ["CenturyGothic", "CenturyGothicBold", "ChristmasFlake", "ChristmasStar"];
 
         botMaintenance.connectBot();
-        //Change the head values
+        
+        //Change the game values
         function renderGameName(name) {
             document.getElementById("gameVal").innerText = name;
         }
 
+        //Change Deaths values
         function renderTotalDValue(value) {
             document.getElementById("deathsTVal").innerText = value;
         }
 
         function renderBossDDValue(name, value) {
-            document.getElementById("deathsB").innerText = name;
-            document.getElementById("deathsBValue").innerText = value;
+            let bName = document.getElementById("deathsB");
+            let bDeath = document.getElementById("deathsBVal");
+
+            bName.innerText = name;
+            bDeath.innerText = value;
+
+            if(bName.classList.contains("hideDiv")){
+                bName.classList.remove("hideDiv");
+            }
+            if(bDeath.classList.contains("hideDiv")){
+                bDeath.classList.remove("hideDiv");
+            }
+
+            bName.classList.add("showDiv");
+            bName.classList.add("showDiv");
         }
+
+        function hideBoss(){
+            let bName = document.getElementById("deathsB");
+            let bDeath = document.getElementById("deathsBVal");
+
+            if(bName.classList.contains("showDiv")){
+                bName.classList.remove("showDiv");
+            }
+            if(bDeath.classList.contains("showDiv")){
+                bDeath.classList.remove("showDiv");
+            }
+
+            bName.classList.add("hideDiv");
+            bDeath.classList.add("hideDiv");
+        }
+
+        function refreshBossRender(name, value){
+            hideBoss();
+            renderBossDDValue(name, value);
+        }
+
         //Test
         function setFont(font) {
             if (fontList.includes(font)) {

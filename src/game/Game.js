@@ -12,9 +12,11 @@ function gameCommandModule() {
     function emptyGame(n) {
         return {
             name: n,
-            bosses: [],
-            currentBoss: null,
-            deathCounter: 0
+            bosses: {},
+            bossID: 0,
+            currentBoss: {},
+            deathCounter: 0,
+            showBoss: false
         };
     }
     function changeGame(game) {
@@ -25,8 +27,8 @@ function gameCommandModule() {
         if (gameExists(game)) {
             botStorage.currentGame = botStorage.games[searchGameByName(game)];
             //Temp
-            renderGameName(botStorage.currentGame.name);
-            renderTotalDValue(botStorage.currentGame.deathCounter);
+            //renderGameName(botStorage.currentGame.name);
+            //renderTotalDValue(botStorage.currentGame.deathCounter);
             return true;
         }
         return false;

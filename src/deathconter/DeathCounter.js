@@ -28,6 +28,9 @@ function deathCounterCommandModule() {
         add: function add() {
             checkDeathCounter();
             botStorage.currentGame.deathCounter++;
+            if(botStorage.currentGame.currentBoss !== undefined && !botStorage.currentGame.currentBoss.defeated){
+                botStorage.currentGame.currentBoss.deaths++;
+            }
             showDeathCounter();
         },
         set: function set(channel, tags, n) {
