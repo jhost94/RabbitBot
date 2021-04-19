@@ -28,7 +28,7 @@ let commands = {
 	//setvalue: commandFunctionality.setTitleValue,
 	death: commandFunctionality.deathCounterCommandCaller,
 	game: commandFunctionality.gameCommandCaller,
-	boss : commandFunctionality.bossCommandCaller
+	boss: commandFunctionality.bossCommandCaller
 }
 
 function botMaintenanceModule() {
@@ -38,7 +38,7 @@ function botMaintenanceModule() {
 			client.connect();
 
 			client.on('message', (channel, tags, message, self) => {
-
+				let success = true;
 				// Ignore echoed messages.
 				if (self) return;
 
@@ -46,12 +46,14 @@ function botMaintenanceModule() {
 				var cmdArray = command.slice(2);
 				if (command[0].toLowerCase() === botReferenceCommand) {
 					if (commands.hasOwnProperty(command[1])) {
-						commands[command[1]](channel, tags, cmdArray);
+						success = commands[command[1]](channel, tags, cmdArray);
 					} else if (command.length > 1) {
 						client.say(channel, `@${tags.username} thats an invalid command. Use ${botConf.accountSettings.command} <${Object.keys(commands)}> commands to get a list of all commands - WIP`)
 					}
-					this.saveToLocalStorage(botStorage);
-					this.quickRefresh();
+					if (success) {
+						this.saveToLocalStorage(botStorage);
+						this.quickRefresh();
+					}
 				}
 
 			});
@@ -60,18 +62,18 @@ function botMaintenanceModule() {
 		saveToLocalStorage: function (bot) {
 			localStorage.setItem("rabbot", JSON.stringify(bot));
 		},
-		quickRefresh: function(){
+		quickRefresh: function () {
 			//NEED FIX
 			renderTotalDValue(botStorage.currentGame.deathCounter);
 
-			if(botStorage.currentGame.currentBoss !== undefined && 
+			if (botStorage.currentGame.currentBoss !== undefined &&
 				botStorage.currentGame.currentBoss.name !== null &&
-				!botStorage.currentGame.currentBoss.defeated){
+				!botStorage.currentGame.currentBoss.defeated) {
 				refreshBossRender(botStorage.currentGame.currentBoss.name,
 					botStorage.currentGame.currentBoss.deaths);
 			}
 		},
-		checkFile: function() {
+		checkFile: function () {
 			setTimeout(() => {
 				if (botConf !== {} && botConf !== undefined && botConf !== null) {
 					this.setupConfig();
@@ -101,14 +103,14 @@ function botMaintenanceModule() {
 			options.identity.password = botConf.botSettings.password;
 			options.channels = botConf.accountSettings.channel;
 		},
-		
+
 		//Wire the bot to the channel
 		connectBot: function () {
 			if (botStorage.currentGame.name) {
 				renderGameName(botStorage.currentGame.name);
 				renderTotalDValue(botStorage.currentGame.deathCounter);
 
-				if(botStorage.currentGame.showBoss){
+				if (botStorage.currentGame.showBoss) {
 					bossCommands.show()
 				}
 			}
@@ -154,10 +156,13 @@ function mainCommandModule() {
 		},
 		//DeathCounter
 		deathCounterCommandCaller: function (channel, tags, message) {
+			let success = true;
 			if (message.length !== 0) {
 				if (deathCounterCommands.hasOwnProperty(message[0])) {
-					deathCounterCommands[message[0]](channel, tags, message.slice(1));
-					client.say(channel, `${channel.slice(1)} has died ${botStorage.currentGame.deathCounter} times.`);
+					success = deathCounterCommands[message[0]](channel, tags, message.slice(1));
+					if (success) {
+						client.say(channel, `${channel.slice(1)} has died ${botStorage.currentGame.deathCounter} times.`);
+					}
 				} else {
 					client.say(channel, `@${tags.username} that command is invalid.`);
 				}
@@ -175,8 +180,8 @@ function mainCommandModule() {
 		},
 		//Boss
 		bossCommandCaller: function (channel, tags, message) {
-			if (message.length !== 0){
-				if (bossCommands.hasOwnProperty(message[0])){
+			if (message.length !== 0) {
+				if (bossCommands.hasOwnProperty(message[0])) {
 					bossCommands[message[0]](channel, tags, message.slice(1));
 				} else {
 					client.say(channel, `@${tags.username} that command is invalid.`)

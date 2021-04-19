@@ -52,13 +52,16 @@ function gameCommandModule() {
             game = game.join(" ");
             if (gameExists(game)) {
                 client.say(channel, `That game is already in the list, type !rb changegame ${game}, to change to it`);
-                return;
+                return false;
             }
             if (game !== null || game !== undefined) {
                 botStorage.games[botStorage.gameID] = emptyGame(game);
                 botStorage.gameID++;
                 changeGame(game);
+            } else {
+                return false;
             }
+            return true;
         },
         changeGame: function (channel, tags, game){
             game = game.join(" ").trim();
@@ -67,6 +70,7 @@ function gameCommandModule() {
             } else {
                 client.say(channel, `Game not found, please type !rb game list to get get the list of all games.`)
             }
+            return true;
         },
         deleteGame: function(channel, tags, game){
             game = game.join(" ");

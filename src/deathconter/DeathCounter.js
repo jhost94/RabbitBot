@@ -1,3 +1,5 @@
+//const { client } = require("tmi.js");
+
 let deathCommandFunctionality = deathCounterCommandModule();
 
 let deathCounterCommands = {
@@ -7,40 +9,42 @@ let deathCounterCommands = {
 
 //DeathCounter commands
 function deathCounterCommandModule() {
-    function showDeathCounter() {
-        renderTotalDValue(botStorage.currentGame.deathCounter);
-        renderGameName(botStorage.currentGame.name);
-        //saveCurrentGame();
-    }
 
     function checkDeathCounter() {
-        showDeathCounter();
-        if (botStorage.currentGame.deathCounter === undefined || botStorage.currentGame.deathCounter === null) {
-            return "No current game active";
-        }
+        return botStorage.currentGame !== undefined &&
+            botStorage.currentGame !== null &&
+            Object.keys(botStorage.currentGame).length > 0;
     }
 
-    function saveCurrentGame (){
+    function saveCurrentGame() {
         botStorage.games[botStorage.currentGame.name] = botStorage.currentGame;
     }
 
     return {
-        add: function add() {
-            checkDeathCounter();
+        add: function add(channel) {
+            if (!checkDeathCounter()) {
+                client.say(channel, "There is no current game active.");
+                return false;
+            }
+
             botStorage.currentGame.deathCounter++;
-            if(botStorage.currentGame.currentBoss !== undefined && !botStorage.currentGame.currentBoss.defeated){
+            
+            if (botStorage.currentGame.currentBoss !== undefined && !botStorage.currentGame.currentBoss.defeated) {
                 botStorage.currentGame.currentBoss.deaths++;
             }
-            showDeathCounter();
+            return true;
         },
         set: function set(channel, tags, n) {
-            checkDeathCounter();
+            if(!checkDeathCounter()){
+                client.say(channel, "There is no current game active.");
+                return false;
+            }
             n = parseInt(n[0], 10);
             if (!isNaN(n)) {
                 botStorage.currentGame.deathCounter = n;
             }
-            showDeathCounter();
-        } 
+            return true;
+        }
     }
 }
 
