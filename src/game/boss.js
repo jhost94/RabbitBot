@@ -1,18 +1,16 @@
-//const { client } = require("tmi.js");
-
-var bossFunctionality = bossCommandModule();
+var stageFunctionality = stageCommandModule();
 
 var bossCommands = {
-    add: bossFunctionality.addBoss,
-    change: bossFunctionality.change,
-    show: bossFunctionality.show,
-    hide: bossFunctionality.hide,
-    finish: bossFunctionality.finish,
-    rename: bossFunctionality.rename,
-    delete: bossFunctionality.delete
+    add: stageFunctionality.addBoss,
+    change: stageFunctionality.change,
+    show: stageFunctionality.show,
+    hide: stageFunctionality.hide,
+    finish: stageFunctionality.finish,
+    rename: stageFunctionality.rename,
+    delete: stageFunctionality.delete
 }
 
-function bossCommandModule() {
+function stageCommandModule() {
     function emptyBoss(n) {
         return {
             name: n,
@@ -25,10 +23,8 @@ function bossCommandModule() {
         if (typeof name == "object") {
             name = fixName(name);
         }
-        //NEED FIXING
+        
         if (bossExists(name)) {
-            if (!checkCurrentBoss()) return false;
-
             botStorage.currentGame.currentBoss = botStorage.currentGame.bosses[searchBossByName(name)];
             renderBoss(name)
             return true
@@ -41,7 +37,7 @@ function bossCommandModule() {
         for (let i = 0; i <= botStorage.currentGame.bossID; i++) {
             if (botStorage.currentGame.bosses[i] !== undefined &&
                 botStorage.currentGame.bosses[i].name.toLowerCase()
-                === name.toLowerCase().trim()) {
+                === fixName(name).toLowerCase()) {
                 return i;
             }
         }

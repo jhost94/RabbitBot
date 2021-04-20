@@ -28,7 +28,11 @@ let commands = {
 	//setvalue: commandFunctionality.setTitleValue,
 	death: commandFunctionality.deathCounterCommandCaller,
 	game: commandFunctionality.gameCommandCaller,
-	boss: commandFunctionality.bossCommandCaller
+	boss: commandFunctionality.bossCommandCaller,
+	stage: commandFunctionality.stageCommandCaller
+}
+let checkUserRoles = {
+
 }
 
 function botMaintenanceModule() {
@@ -36,9 +40,9 @@ function botMaintenanceModule() {
 		startUp: function () {
 			botReferenceCommand = botConf.accountSettings.command;
 			client.connect();
-
 			client.on('message', (channel, tags, message, self) => {
 				var success = true;
+				console.log(tags)
 				// Ignore echoed messages.
 				if (self) return;
 
@@ -70,9 +74,15 @@ function botMaintenanceModule() {
 			if (botStorage.currentGame.currentBoss !== undefined &&
 				!botStorage.currentGame.currentBoss.defeated &&
 				botStorage.currentGame.showBoss) {
-				console.log("Did refresh!")
 				refreshBossRender(botStorage.currentGame.currentBoss.name,
 					botStorage.currentGame.currentBoss.deaths);
+			}
+
+			if (botStorage.currentGame.currentStage !== undefined &&
+				!botStorage.currentGame.currentStage.finished &&
+				botStorage.currentGame.showStage) {
+				refreshStageRender(botStorage.currentGame.currentStage.name,
+					botStorage.currentGame.currentStage.deaths);
 			}
 		},
 		checkFile: function () {
@@ -85,6 +95,8 @@ function botMaintenanceModule() {
 					//FIX
 					renderGameName("Config file not loaded");
 					renderTotalDValue("");
+					hideStage();
+					hideBoss();
 				}
 			}, 0)
 		},
@@ -112,9 +124,8 @@ function botMaintenanceModule() {
 				renderGameName(botStorage.currentGame.name);
 				renderTotalDValue(botStorage.currentGame.deathCounter);
 
-				if (botStorage.currentGame.showBoss) {
-					bossCommands.show()
-				}
+				if (botStorage.currentGame.showBoss) bossCommands.show();
+				if (botStorage.currentGame.showStage) stageCommands.show();
 			}
 			botMaintenance.getConf("./config.json");
 			//botMaintenance.checkFile();
@@ -129,7 +140,7 @@ function mainCommandModule() {
 
 	function saveCurrentGameToList() {
 		let gameID = searchGameByName(botStorage.currentGame.name);
-		if (gameID != -1){
+		if (gameID != -1) {
 			botStorage.games[gameID] = botStorage.currentGame;
 		}
 	}
@@ -207,11 +218,24 @@ function mainCommandModule() {
 		},
 		//Boss
 		bossCommandCaller: function (channel, tags, message) {
-			console.log(message);
 			let success = true;
 			if (message.length !== 0) {
 				if (bossCommands.hasOwnProperty(message[0])) {
 					success = bossCommands[message[0]](channel, tags, message.slice(1));
+				} else {
+					client.say(channel, `@${tags.username} that command is invalid.`);
+					success = false;
+				}
+			}
+			console.log(success)
+			if (success) saveCurrentGameToList();
+			return success;
+		},
+		//Stage
+		stageCommandCaller: function (channel, tags, message) {
+			if (message.length !== 0) {
+				if (stageCommands.hasOwnProperty(message[0])) {
+					success = stageCommands[message[0]](channel, tags, message.slice(1));
 				} else {
 					client.say(channel, `@${tags.username} that command is invalid.`);
 					success = false;
@@ -237,4 +261,18 @@ function getStoragedBot() {
 			followers: 0, //For now will check only the number of folowers
 			gameID: 0
 		};
+}
+
+/**
+ * User roles and authorization for command uses
+ * Possible roles:
+ * broadcaster - badge
+ * mod
+ * subscriber
+ * turbo
+ * 
+*/
+
+function checkuserRolesFunction(){
+
 }

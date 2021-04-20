@@ -34,6 +34,10 @@
                 Boss
             </div>
 
+            <div id="deathsS" class="hideDiv">
+                Stage
+            </div>
+
         </div>
 
         <span class="seperator">
@@ -54,6 +58,10 @@
                 0
             </div>
 
+            <div id="deathsSVal" class="hideDiv">
+                0
+            </div>
+
         </div>
 
     </div>
@@ -62,7 +70,7 @@
         const fontList = ["CenturyGothic", "CenturyGothicBold", "ChristmasFlake", "ChristmasStar"];
 
         botMaintenance.connectBot();
-        
+
         //Change the game values
         function renderGameName(name) {
             document.getElementById("gameVal").innerText = name;
@@ -72,7 +80,7 @@
         function renderTotalDValue(value) {
             document.getElementById("deathsTVal").innerText = value;
         }
-
+        //Boss values
         function renderBossDDValue(name, value) {
             let bName = document.getElementById("deathsB");
             let bDeath = document.getElementById("deathsBVal");
@@ -80,10 +88,10 @@
             bName.innerText = name;
             bDeath.innerText = value;
 
-            if(bName.classList.contains("hideDiv")){
+            if (bName.classList.contains("hideDiv")) {
                 bName.classList.remove("hideDiv");
             }
-            if(bDeath.classList.contains("hideDiv")){
+            if (bDeath.classList.contains("hideDiv")) {
                 bDeath.classList.remove("hideDiv");
             }
 
@@ -91,14 +99,14 @@
             bName.classList.add("showDiv");
         }
 
-        function hideBoss(){
+        function hideBoss() {
             let bName = document.getElementById("deathsB");
             let bDeath = document.getElementById("deathsBVal");
 
-            if(bName.classList.contains("showDiv")){
+            if (bName.classList.contains("showDiv")) {
                 bName.classList.remove("showDiv");
             }
-            if(bDeath.classList.contains("showDiv")){
+            if (bDeath.classList.contains("showDiv")) {
                 bDeath.classList.remove("showDiv");
             }
 
@@ -106,9 +114,49 @@
             bDeath.classList.add("hideDiv");
         }
 
-        function refreshBossRender(name, value){
+        function refreshBossRender(name, value) {
             hideBoss();
             renderBossDDValue(name, value);
+        }
+
+
+        //Stage values
+        function renderStageDValue(name, value) {
+            let sName = document.getElementById("deathsS");
+            let sDeath = document.getElementById("deathsSVal");
+
+            sName.innerText = name;
+            sDeath.innerText = value;
+
+            if (sName.classList.contains("hideDiv")) {
+                sName.classList.remove("hideDiv");
+            }
+            if (sDeath.classList.contains("hideDiv")) {
+                sDeath.classList.remove("hideDiv");
+            }
+
+            sName.classList.add("showDiv");
+            sName.classList.add("showDiv");
+        }
+
+        function hideStage() {
+            let sName = document.getElementById("deathsS");
+            let sDeath = document.getElementById("deathsSVal");
+
+            if (sName.classList.contains("showDiv")) {
+                sName.classList.remove("showDiv");
+            }
+            if (sDeath.classList.contains("showDiv")) {
+                sDeath.classList.remove("showDiv");
+            }
+
+            sName.classList.add("hideDiv");
+            sDeath.classList.add("hideDiv");
+        }
+
+        function refreshStageRender(name, value) {
+            hideStage();
+            renderStageDValue(name, value);
         }
 
         //Test

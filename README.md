@@ -9,7 +9,6 @@ Game list that implements the death counter and a boss list for each game.
 # Future features
 - Command restriction, for certain commands only moderators or channel owner can use, and not everyone.
 - Full customization, the streamer has ALL the power. Use a way to have a user-friendly option management, and changes updated live.
-- More on screen elements, like subs alert, donations, etc. AND BETTER.
 
 # Instructions
 To run the plugin on OBS:
@@ -18,7 +17,7 @@ To run the plugin on OBS:
 3 - Make sure you have OBS opend.
 4 - Under "Sources" click the "+" button.
 5 - Select "Browser" and "Create new" option.
-6 - Select the "Local fole" box, click "Browse" and find "app.js" from where this bot's folder is located.
+6 - Select the "Local file" box, click "Browse" and find "app.html" from where this bot's folder is located.
 7 - Select "Shutdown source when not visible" and "Refresh browser when scene becomes active" for better performance. --Optional--
 8 - Click "OK".
 
@@ -37,6 +36,19 @@ Added new boss commands, fully optional.
 These new commands have all base options, similar to "Game" and a few more.
 Fixed some bugs.
 
+0.6.1
+Most boss commands fixed.
+
+0.7.0
+Added stage commands, similar boss commands.
+Fixed Game integrity issues.
+Some bugs with stage commands, changing into a stage with no current boss duplicates the stages on screen.
+Transition when removing Boss on screen is sloppy.
+
+0.7.1
+Fixed stage duplicating when appearing on screen with no bosses.
+Smoother transitions.
+
 # Commands
 !rb commands - WIP
 
@@ -51,9 +63,18 @@ Fixed some bugs.
 !rb boss hide
 !rb boss add <Boss Name>
 !rb boss change <Boss Name>
-->!rb boss rename <Old Boss Name, New Boss Name>
-->!rb boss delete <Boss Name>
-->!rb boss finish
+!rb boss rename <Old Boss Name, New Boss Name>
+!rb boss delete <Boss Name>
+!rb boss finish
+
+-->!rb stage <Stage name (optional)>
+!rb stage show
+!rb stage hide
+!rb stage add <Stage Name>
+!rb stage change <Stage Name>
+!rb stage rename <Old Stage Name, New Stage Name>
+!rb stage delete <Stage Name>
+!rb stage finish
 
 -->!rb death
 !rb death add

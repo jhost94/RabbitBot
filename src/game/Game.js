@@ -17,8 +17,10 @@ function gameCommandModule() {
             currentBoss: {},
             stages: {},
             stageID: 0,
+            currentStage: {},
             deathCounter: 0,
-            showBoss: false
+            showBoss: false,
+            showStage: false
         };
     }
     function changeGame(game) {
@@ -85,7 +87,7 @@ function gameCommandModule() {
                 delete botStorage.games[searchGameByName(game)];
                 client.say(channel, `Game ${game} was deleted from the game list.`);
                 var lastGameIndex = listGames()[listGames().length - 1];
-                
+
                 if(lastGameIndex !== undefined){
                     changeGame(channel, tags, botStorage.games[lastGameIndex].name);
                 } else {

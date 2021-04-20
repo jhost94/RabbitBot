@@ -43,6 +43,20 @@ body {
     opacity: 0;
     left: 5px;
     transition: all 0.5s linear;
+    animation-name: hide;
+    animation-duration: 1s;
+    animation-delay: 0.3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: both;
+}
+
+@keyframes hide {
+    0% {
+        position: relative;
+    }
+    100% {
+        position: absolute;
+    }
 }
 
 @font-face {
