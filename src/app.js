@@ -68,9 +68,8 @@ function botMaintenanceModule() {
 			renderGameName(botStorage.currentGame.name);
 
 			if (botStorage.currentGame.currentBoss !== undefined &&
-				botStorage.currentGame.currentBoss.name !== null &&
 				!botStorage.currentGame.currentBoss.defeated &&
-				botStorage.currentGame.currentBoss.showBoss) {
+				botStorage.currentGame.showBoss) {
 				console.log("Did refresh!")
 				refreshBossRender(botStorage.currentGame.currentBoss.name,
 					botStorage.currentGame.currentBoss.deaths);
