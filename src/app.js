@@ -38,7 +38,7 @@ function botMaintenanceModule() {
 			client.connect();
 
 			client.on('message', (channel, tags, message, self) => {
-				let success = true;
+				var success = true;
 				// Ignore echoed messages.
 				if (self) return;
 
@@ -49,13 +49,13 @@ function botMaintenanceModule() {
 						success = commands[command[1]](channel, tags, cmdArray);
 					} else if (command.length > 1) {
 						client.say(channel, `@${tags.username} thats an invalid command. Use ${botConf.accountSettings.command} <${Object.keys(commands)}> commands to get a list of all commands - WIP`)
-					}
-					if (success) {
-						this.saveToLocalStorage(botStorage);
-						this.quickRefresh();
+						success = false;
 					}
 				}
-
+				if (success) {
+					this.saveToLocalStorage(botStorage);
+					this.quickRefresh();
+				}
 			});
 		},
 		//Storage management
@@ -65,10 +65,13 @@ function botMaintenanceModule() {
 		quickRefresh: function () {
 			//NEED FIX
 			renderTotalDValue(botStorage.currentGame.deathCounter);
+			renderGameName(botStorage.currentGame.name);
 
 			if (botStorage.currentGame.currentBoss !== undefined &&
 				botStorage.currentGame.currentBoss.name !== null &&
-				!botStorage.currentGame.currentBoss.defeated) {
+				!botStorage.currentGame.currentBoss.defeated &&
+				botStorage.currentGame.currentBoss.showBoss) {
+				console.log("Did refresh!")
 				refreshBossRender(botStorage.currentGame.currentBoss.name,
 					botStorage.currentGame.currentBoss.deaths);
 			}
@@ -124,6 +127,24 @@ function botMaintenanceModule() {
  * Command functionality
 */
 function mainCommandModule() {
+
+	function saveCurrentGameToList() {
+		let gameID = searchGameByName(botStorage.currentGame.name);
+		if (gameID != -1){
+			botStorage.games[gameID] = botStorage.currentGame;
+		}
+	}
+
+	function searchGameByName(game) {
+		for (let i = 0; i < botStorage.gameID; i++) {
+			if (botStorage.games[i] !== undefined && botStorage.games[i].name === game) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+
 	return {
 		//Tests
 		bitjs: function (channel, tags, message) {
@@ -166,27 +187,38 @@ function mainCommandModule() {
 				} else {
 					client.say(channel, `@${tags.username} that command is invalid.`);
 				}
+
+				if (success) saveCurrentGameToList();
+				return success;
 			}
 		},
 		//Game
 		gameCommandCaller: function (channel, tags, message) {
+			let success = true;
 			if (message.length !== 0) {
 				if (gameCommands.hasOwnProperty(message[0])) {
-					gameCommands[message[0]](channel, tags, message.slice(1));
+					success = gameCommands[message[0]](channel, tags, message.slice(1));
 				} else {
-					client.say(channel, `@${tags.username} that command is invalid.`)
+					client.say(channel, `@${tags.username} that command is invalid.`);
+					success = false;
 				}
 			}
+			if (success) saveCurrentGameToList();
+			return success;
 		},
 		//Boss
 		bossCommandCaller: function (channel, tags, message) {
+			let success = true;
 			if (message.length !== 0) {
 				if (bossCommands.hasOwnProperty(message[0])) {
-					bossCommands[message[0]](channel, tags, message.slice(1));
+					success = bossCommands[message[0]](channel, tags, message.slice(1));
 				} else {
-					client.say(channel, `@${tags.username} that command is invalid.`)
+					client.say(channel, `@${tags.username} that command is invalid.`);
+					success = false;
 				}
 			}
+			console.log(success)
+			if (success) saveCurrentGameToList();
 		}
 	}
 

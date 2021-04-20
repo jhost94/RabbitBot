@@ -16,10 +16,6 @@ function deathCounterCommandModule() {
             Object.keys(botStorage.currentGame).length > 0;
     }
 
-    function saveCurrentGame() {
-        botStorage.games[botStorage.currentGame.name] = botStorage.currentGame;
-    }
-
     return {
         add: function add(channel) {
             if (!checkDeathCounter()) {
@@ -29,7 +25,9 @@ function deathCounterCommandModule() {
 
             botStorage.currentGame.deathCounter++;
             
-            if (botStorage.currentGame.currentBoss !== undefined && !botStorage.currentGame.currentBoss.defeated) {
+            if (botStorage.currentGame.currentBoss !== undefined && 
+                botStorage.currentGame.currentBoss.deaths !== null &&
+                !botStorage.currentGame.currentBoss.defeated) {
                 botStorage.currentGame.currentBoss.deaths++;
             }
             return true;

@@ -15,6 +15,8 @@ function gameCommandModule() {
             bosses: {},
             bossID: 0,
             currentBoss: {},
+            stages: {},
+            stageID: 0,
             deathCounter: 0,
             showBoss: false
         };
@@ -33,6 +35,7 @@ function gameCommandModule() {
         }
         return false;
     }
+
     function searchGameByName(game){
         for(let i = 0; i < botStorage.gameID; i++){
             if(botStorage.games[i] !== undefined && botStorage.games[i].name === game){
@@ -41,20 +44,23 @@ function gameCommandModule() {
         }
         return -1;
     }
+
     function gameExists(game){
         return searchGameByName(game) !== -1;
     }
+
     function listGames(){
         return(Object.getOwnPropertyNames(botStorage.games));
     }
+
     return {
         addGame: function (channel, tags, game) {
-            game = game.join(" ");
+            game = game.join(" ").trim();
             if (gameExists(game)) {
                 client.say(channel, `That game is already in the list, type !rb changegame ${game}, to change to it`);
                 return false;
             }
-            if (game !== null || game !== undefined) {
+            if (game !== null && game !== undefined && game.length > 0) {
                 botStorage.games[botStorage.gameID] = emptyGame(game);
                 botStorage.gameID++;
                 changeGame(game);
@@ -66,9 +72,10 @@ function gameCommandModule() {
         changeGame: function (channel, tags, game){
             game = game.join(" ").trim();
             if(changeGame(game)){
-                client.say(channel, `Game changed to ${game}`)
+                client.say(channel, `Game changed to ${game}`);
             } else {
-                client.say(channel, `Game not found, please type !rb game list to get get the list of all games.`)
+                client.say(channel, `Game not found, please type !rb game list to get get the list of all games.`);
+                return false;
             }
             return true;
         },
@@ -87,11 +94,15 @@ function gameCommandModule() {
                 }
             } else {
                 client.say(channel, `No games were found with that name, please type !rb game list to get the list of all the games.`)
+                return false;
             }
+            return true;
         },
         listGames: function (channel, tags, game){
             var gameList = listGames().map(ele => botStorage.games[ele].name);
-            client.say(channel, `Games currently in the game list: ${gameList}`);
+            client.say(channel, gameList.length > 0 ? `Games currently in the game list: ${gameList}` :
+            "Game list is currently empty.");
+            return true;
         },
         changeGameName: function (channel, tags, name){
             var oldGameName = botStorage.currentGame.name;
@@ -107,7 +118,9 @@ function gameCommandModule() {
                 client.say(channel, `${name[0]} changed to ${name[1]}`);
             } else {
                 client.say(channel, `Game not found.`);
+                return false;
             }
+            return true;
         }
     }
 }

@@ -1,3 +1,5 @@
+//const { client } = require("tmi.js");
+
 var bossFunctionality = bossCommandModule();
 
 var bossCommands = {
@@ -48,9 +50,9 @@ function bossCommandModule() {
 
     function checkCurrentGame() {
         console.log(botStorage.currentGame)
-        return botStorage.currentGame !== undefined && 
-        botStorage.currentGame !== null &&
-        Object.keys(botStorage.currentGame).length !== 0;
+        return botStorage.currentGame !== undefined &&
+            botStorage.currentGame !== null &&
+            Object.keys(botStorage.currentGame).length !== 0;
     }
 
     function fixName(name) {
@@ -58,8 +60,12 @@ function bossCommandModule() {
         return typeof name === "string" ? name.trim() : name.join(" ").trim();
     }
 
+    function hideBoss() {
+
+    }
+
     function renderBoss(name) {
-        if(typeof name !== "string"){
+        if (typeof name !== "string") {
             name = fixName(name);
         }
 
@@ -67,11 +73,11 @@ function bossCommandModule() {
             refreshBossRender(botStorage.currentGame.currentBoss.name, botStorage.currentGame.currentBoss.deaths);
             botStorage.currentGame.showBoss = true;
         } else {
-            client.say(channel, "An error occured.")
+            client.say(channel, "An error occured.");
         }
     }
 
-    function isBossFinished(){
+    function isBossFinished() {
         return botStorage.currentGame.currentBoss.defeated;
     }
 
@@ -79,47 +85,63 @@ function bossCommandModule() {
         addBoss: function (channel, tags, name) {
             name = fixName(name);
             //Check if there is an active game
-
+            if (!checkCurrentGame()) {
+                client.say(channel, "There is no current game.");
+                return false;
+            }
             if (bossExists(name)) {
                 client.say(channel, `That boss is already in the list, type !rb boss change ${name}, to change into it.`);
-                return;
+                return false;
             }
             console.log(name)
-            if (name !== undefined || name !== null || name.length !== 0) {
+            if (name !== undefined && name !== null && name.length !== 0) {
                 botStorage.currentGame.bosses[botStorage.currentGame.bossID] = emptyBoss(name);
                 botStorage.currentGame.bossID++;
                 changeBoss(name);
             }
+            return true;
         },
         change: function (channel, tags, name) {
             name = fixName(name);
 
-            client.say(channel, changeBoss(name) ? `Boss changed to ${name}` : `Boss ${name} not found.`)
+            let isBossChanged = changeBoss(name);
+            client.say(channel, isBossChanged ? `Boss changed to ${name}` : `Boss ${name} not found.`)
+
+            return isBossChanged;
         },
-        show: function () {
-            if(checkCurrentGame()){
-                renderBoss(botStorage.currentGame.currentBoss.name);
+        show: function (channel) {
+            if (!checkCurrentGame()) {
+                client.say(channel, "No current game found.")
+                return false;
             }
+            renderBoss(botStorage.currentGame.currentBoss.name);
+            return true;
         },
-        hide: function() {
+        hide: function () {
             hideBoss();
+            if (!checkCurrentGame()) {
+                return false;
+            }
             botStorage.currentGame.showBoss = false;
+            return true;
         },
-        finish: function(channel){
-            if(checkCurrentGame() && isBossFinished()){
+        finish: function (channel) {
+            if (checkCurrentGame() && !isBossFinished()) {
                 botStorage.currentGame.currentBoss.defeated = true;
-                client.say(channel, `Boss ${botStorage.currentGame.currentBoss.name} finished with ${botStorage,currentGame,currentBoss,deaths}.`);
+                client.say(channel, `Boss ${botStorage.currentGame.currentBoss.name} finished with ${botStorage, currentGame, currentBoss, deaths}.`);
                 hideBoss();
                 botStorage.currentGame.currentBoss = {};
             } else {
                 client.say(channel, "There was an error");
+                return false;
             }
+            return true;
         },
-        rename: function (){
-
+        rename: function () {
+            return true;
         },
-        delete: function (){
-
+        delete: function () {
+            return true;
         }
     }
 }
