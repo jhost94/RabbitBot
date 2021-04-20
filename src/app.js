@@ -207,6 +207,7 @@ function mainCommandModule() {
 		},
 		//Boss
 		bossCommandCaller: function (channel, tags, message) {
+			console.log(message);
 			let success = true;
 			if (message.length !== 0) {
 				if (bossCommands.hasOwnProperty(message[0])) {
@@ -218,6 +219,7 @@ function mainCommandModule() {
 			}
 			console.log(success)
 			if (success) saveCurrentGameToList();
+			return success;
 		}
 	}
 

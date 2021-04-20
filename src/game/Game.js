@@ -85,7 +85,7 @@ function gameCommandModule() {
                 delete botStorage.games[searchGameByName(game)];
                 client.say(channel, `Game ${game} was deleted from the game list.`);
                 var lastGameIndex = listGames()[listGames().length - 1];
-                console.log(lastGameIndex);
+                
                 if(lastGameIndex !== undefined){
                     changeGame(channel, tags, botStorage.games[lastGameIndex].name);
                 } else {
