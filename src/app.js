@@ -24,8 +24,6 @@ let commands = {
 	//bitjs: commandFunctionality.bitjs,
 	//test: test,
 	commands: commandFunctionality.cmd,
-	//setname: commandFunctionality.setTitleName,
-	//setvalue: commandFunctionality.setTitleValue,
 	death: commandFunctionality.deathCounterCommandCaller,
 	game: commandFunctionality.gameCommandCaller,
 	boss: commandFunctionality.bossCommandCaller,
@@ -154,6 +152,45 @@ function mainCommandModule() {
 		return -1;
 	}
 
+	function canUseCommand(permition, tags) {
+		if (!checkPermitionsExist()) {
+			console.log("No settings");
+			return checkBroadcaster() || checkMod();
+		}
+
+		permition = botConf.permitions[permition]
+
+		switch (permition) {
+			case "broadcaster":
+				return checkBroadcaster(tags);
+			case "mod":
+				return checkMod(tags);
+			case "sub":
+				return checkSub(tags);
+			case "viewer":
+				return checkViewer(tags);
+		}
+	}
+
+	function checkBroadcaster(tags) {
+		return tags.badges.broadcaster == "1";
+	}
+
+	function checkMod(tags) {
+		return tags.mod;
+	}
+
+	function checkSub(tags) {
+		return tags.subscriber;
+	}
+
+	function checkViewer(tags) {
+		return true; //to be changed
+	}
+
+	function checkPermitionsExist() {
+		return botConf.permitions !== null && botConf.permitions !== undefined;
+	}
 
 	return {
 		//Tests
@@ -180,11 +217,6 @@ function mainCommandModule() {
 		cmd: function (channel) {
 			client.say(channel, `The full list of commands: ${Object.keys(commands)}`);
 		},
-		//Change the Title Name and Value
-		setGameName: function (channel, tags, message) {
-			renderGameName(message[0]);
-			client.say(channel, "Game name changed to " + message[0]);
-		},
 		//DeathCounter
 		deathCounterCommandCaller: function (channel, tags, message) {
 			let success = true;
@@ -205,6 +237,9 @@ function mainCommandModule() {
 		//Game
 		gameCommandCaller: function (channel, tags, message) {
 			let success = true;
+
+			if (!canUseCommand("game", tags)) return false;
+
 			if (message.length !== 0) {
 				if (gameCommands.hasOwnProperty(message[0])) {
 					success = gameCommands[message[0]](channel, tags, message.slice(1));
@@ -219,6 +254,9 @@ function mainCommandModule() {
 		//Boss
 		bossCommandCaller: function (channel, tags, message) {
 			let success = true;
+
+			if (!canUseCommand("game", tags)) return false;
+
 			if (message.length !== 0) {
 				if (bossCommands.hasOwnProperty(message[0])) {
 					success = bossCommands[message[0]](channel, tags, message.slice(1));
@@ -233,6 +271,10 @@ function mainCommandModule() {
 		},
 		//Stage
 		stageCommandCaller: function (channel, tags, message) {
+			let success = true;
+
+			if (!canUseCommand("game", tags)) return false;
+
 			if (message.length !== 0) {
 				if (stageCommands.hasOwnProperty(message[0])) {
 					success = stageCommands[message[0]](channel, tags, message.slice(1));
@@ -273,6 +315,6 @@ function getStoragedBot() {
  * 
 */
 
-function checkuserRolesFunction(){
+function checkuserRolesFunction() {
 
 }
