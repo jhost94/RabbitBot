@@ -152,12 +152,12 @@ function mainCommandModule() {
 		return -1;
 	}
 
-	function canUseCommand(permition, tags) {
-		if (!checkPermitionsExist()) {
+	function canUseCommand(permission, tags) {
+		if (!checkPermissionsExist()) {
 			return checkBroadcaster(tags) || checkMod(tags);
 		}
 
-		permition = botConf.permitions[permition]
+		permission = botConf.permissions[permission]
 
 		switch (permition) {
 			case "broadcaster":
@@ -188,8 +188,8 @@ function mainCommandModule() {
 		return true; //to be changed
 	}
 
-	function checkPermitionsExist() {
-		return botConf.permitions !== null && botConf.permitions !== undefined;
+	function checkPermissionsExist() {
+		return botConf.permissions !== null && botConf.permissions !== undefined;
 	}
 
 
@@ -200,6 +200,8 @@ function mainCommandModule() {
 	return {
 		//Send the list of commands
 		cmd: function (channel) {
+			if (!canUseCommand("cmd", tags)) return false;
+
 			client.say(channel, `The full list of commands: ${Object.keys(commands)}`);
 		},
 		//DeathCounter
