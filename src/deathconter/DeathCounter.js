@@ -10,6 +10,17 @@ let deathCounterCommands = {
 //DeathCounter commands
 function deathCounterCommandModule() {
 
+    function checkExtraCounters(c){
+        if(botStorage.currentGame.hasOwnProperty(c)){
+            if(botStorage.currentGame.c !== undefined && 
+                botStorage.currentGame.c.deaths !== null &&
+                !botStorage.currentGame.c.finished) {
+
+                botStorage.currentGame.c.deaths++;
+            }
+        }
+    }
+
     function checkDeathCounter() {
         return botStorage.currentGame !== undefined &&
             botStorage.currentGame !== null &&
@@ -25,11 +36,7 @@ function deathCounterCommandModule() {
 
             botStorage.currentGame.deathCounter++;
             
-            if (botStorage.currentGame.currentBoss !== undefined && 
-                botStorage.currentGame.currentBoss.deaths !== null &&
-                !botStorage.currentGame.currentBoss.defeated) {
-                botStorage.currentGame.currentBoss.deaths++;
-            }
+            
             return true;
         },
         set: function set(channel, tags, n) {

@@ -15,7 +15,7 @@ function stageCommandModule() {
         return {
             name: n,
             deaths: 0,
-            defeated: false
+            finished: false
         }
     }
 
@@ -80,7 +80,7 @@ function stageCommandModule() {
     }
 
     function isBossFinished() {
-        return botStorage.currentGame.currentBoss.defeated;
+        return botStorage.currentGame.currentBoss.finished;
     }
 
     return {
@@ -127,7 +127,7 @@ function stageCommandModule() {
         },
         finish: function (channel) {
             if (checkCurrentGame() && !isBossFinished()) {
-                botStorage.currentGame.currentBoss.defeated = true;
+                botStorage.currentGame.currentBoss.finished = true;
                 client.say(channel, `Boss ${botStorage.currentGame.currentBoss.name} finished with ${botStorage.currentGame.currentBoss.deaths}.`);
                 hideBossLine();
                 botStorage.currentGame.currentBoss = {};
@@ -151,10 +151,8 @@ function stageCommandModule() {
             let bossID = searchBossByName(names[0]);
             if (bossID === -1) return false;
 
-            console.log(botStorage.currentGame.bosses[bossID].name)
             botStorage.currentGame.bosses[bossID].name = names[1];
             changeBoss(names[1]);
-            console.log(botStorage.currentGame.bosses[bossID].name)
             return true;
         },
         delete: function (channel, tags, name) {

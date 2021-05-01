@@ -1,6 +1,9 @@
 var botConf;
 var botReferenceCommand;
 
+//Debugging purposes
+var tag;
+
 const options = {
 	options: {
 		debug: true
@@ -21,16 +24,11 @@ let botStorage = getStoragedBot();
 let commandFunctionality = mainCommandModule();
 let botMaintenance = botMaintenanceModule();
 let commands = {
-	//bitjs: commandFunctionality.bitjs,
-	//test: test,
-	commands: commandFunctionality.cmd,
+	cmd: commandFunctionality.cmd,
 	death: commandFunctionality.deathCounterCommandCaller,
 	game: commandFunctionality.gameCommandCaller,
 	boss: commandFunctionality.bossCommandCaller,
 	stage: commandFunctionality.stageCommandCaller
-}
-let checkUserRoles = {
-
 }
 
 function botMaintenanceModule() {
@@ -39,8 +37,8 @@ function botMaintenanceModule() {
 			botReferenceCommand = botConf.accountSettings.command;
 			client.connect();
 			client.on('message', (channel, tags, message, self) => {
-				var success = true;
-				console.log(tags)
+				var success = false;
+				tag = tags;
 				// Ignore echoed messages.
 				if (self) return;
 
@@ -50,8 +48,10 @@ function botMaintenanceModule() {
 					if (commands.hasOwnProperty(command[1])) {
 						success = commands[command[1]](channel, tags, cmdArray);
 					} else if (command.length > 1) {
-						client.say(channel, `@${tags.username} thats an invalid command. Use ${botConf.accountSettings.command} <${Object.keys(commands)}> commands to get a list of all commands - WIP`)
+						client.say(channel, `@${tags.username} thats an invalid command. Use ${botConf.accountSettings.command} <${Object.keys(commands)}> commands to get a list of all commands.`);
 						success = false;
+					} else {
+						client.say(channel, `@${tags.username} hi, I'm alive!`);
 					}
 				}
 				if (success) {
@@ -126,7 +126,6 @@ function botMaintenanceModule() {
 				if (botStorage.currentGame.showStage) stageCommands.show();
 			}
 			botMaintenance.getConf("./config.json");
-			//botMaintenance.checkFile();
 		}
 	}
 }
@@ -134,6 +133,7 @@ function botMaintenanceModule() {
 /**
  * Command functionality
 */
+
 function mainCommandModule() {
 
 	function saveCurrentGameToList() {
@@ -154,8 +154,7 @@ function mainCommandModule() {
 
 	function canUseCommand(permition, tags) {
 		if (!checkPermitionsExist()) {
-			console.log("No settings");
-			return checkBroadcaster() || checkMod();
+			return checkBroadcaster(tags) || checkMod(tags);
 		}
 
 		permition = botConf.permitions[permition]
@@ -173,7 +172,8 @@ function mainCommandModule() {
 	}
 
 	function checkBroadcaster(tags) {
-		return tags.badges.broadcaster == "1";
+		console.log(tags)
+		return tags.badges.broadcaster === "1";
 	}
 
 	function checkMod(tags) {
@@ -192,34 +192,23 @@ function mainCommandModule() {
 		return botConf.permitions !== null && botConf.permitions !== undefined;
 	}
 
+
+	/////////
+	//Command list
+	////////
+
 	return {
-		//Tests
-		bitjs: function (channel, tags, message) {
-			client.action(channel, message.join(" "));
-			//client.say(channel, `/me sup bitjs`);
-		},
-		test: function (channel, tags, command) {
-			if (tags.badges.broadcaster) {
-				client.say(channel, `@${tags.username} yes lord?`)
-			} else {
-				client.say(channel, `This is a test`);
-			}
-			//console.log(localStorage);
-			console.log(tags);
-			//console.log(channel);
-			//console.log(client);
-			botStorage.test != undefined ? botStorage.test++ : botStorage.test = 0;
-			saveToLocalStorage(botStorage);
-			renderTitleValue(botStorage.test);
-			client.say(channel, "Test counter: " + botStorage.test);
-		},
 		//Send the list of commands
 		cmd: function (channel) {
 			client.say(channel, `The full list of commands: ${Object.keys(commands)}`);
 		},
 		//DeathCounter
 		deathCounterCommandCaller: function (channel, tags, message) {
-			let success = true;
+			let success = false;
+
+			if (!canUseCommand("death", tags)) return false;
+
+
 			if (message.length !== 0) {
 				if (deathCounterCommands.hasOwnProperty(message[0])) {
 					success = deathCounterCommands[message[0]](channel, tags, message.slice(1));
@@ -232,11 +221,14 @@ function mainCommandModule() {
 
 				if (success) saveCurrentGameToList();
 				return success;
+			} else {
+				client.say(channel, `${channel} has died ${botStorage.currentGame.deathCounter} times this game.`);
+				client.say(channel, `Death-counters commands: ${Object.keys(deathCounterCommands)}`);
 			}
 		},
 		//Game
 		gameCommandCaller: function (channel, tags, message) {
-			let success = true;
+			let success = false;
 
 			if (!canUseCommand("game", tags)) return false;
 
@@ -244,7 +236,7 @@ function mainCommandModule() {
 				if (gameCommands.hasOwnProperty(message[0])) {
 					success = gameCommands[message[0]](channel, tags, message.slice(1));
 				} else {
-					client.say(channel, `@${tags.username} that command is invalid.`);
+					client.say(channel, `Game commands: ${Object.keys(gameCommands)}`);
 					success = false;
 				}
 			}
@@ -253,7 +245,7 @@ function mainCommandModule() {
 		},
 		//Boss
 		bossCommandCaller: function (channel, tags, message) {
-			let success = true;
+			let success = false;
 
 			if (!canUseCommand("game", tags)) return false;
 
@@ -261,29 +253,29 @@ function mainCommandModule() {
 				if (bossCommands.hasOwnProperty(message[0])) {
 					success = bossCommands[message[0]](channel, tags, message.slice(1));
 				} else {
-					client.say(channel, `@${tags.username} that command is invalid.`);
+					client.say(channel, `Boss commands: ${Object.keys(bossCommands)}`);
 					success = false;
 				}
 			}
-			console.log(success)
+
 			if (success) saveCurrentGameToList();
 			return success;
 		},
 		//Stage
 		stageCommandCaller: function (channel, tags, message) {
-			let success = true;
+			let success = false;
 
 			if (!canUseCommand("game", tags)) return false;
 
 			if (message.length !== 0) {
 				if (stageCommands.hasOwnProperty(message[0])) {
 					success = stageCommands[message[0]](channel, tags, message.slice(1));
-				} else {
-					client.say(channel, `@${tags.username} that command is invalid.`);
-					success = false;
 				}
+			} else {
+				client.say(channel, `Stage commands: ${Object.keys(stageCommands)}`);
+				success = false;
 			}
-			console.log(success)
+
 			if (success) saveCurrentGameToList();
 			return success;
 		}
@@ -312,9 +304,5 @@ function getStoragedBot() {
  * mod
  * subscriber
  * turbo
- * 
+ *
 */
-
-function checkuserRolesFunction() {
-
-}
