@@ -40,7 +40,7 @@ function botMaintenanceModule() {
 				var success = false;
 				// Ignore echoed messages.
 				if (self) return;
-				
+
 				tag = tags;
 
 				var command = message.split(" ");
@@ -154,13 +154,14 @@ function mainCommandModule() {
 	}
 
 	function canUseCommand(permission, tags) {
-		if (!checkPermissionsExist()) {
+		if (!checkPermissionsExist("cmd")) {
+			console.log("FUCK")
 			return checkBroadcaster(tags) || checkMod(tags);
 		}
 
 		permission = botConf.permissions[permission]
 
-		switch (permition) {
+		switch (permission) {
 			case "broadcaster":
 				return checkBroadcaster(tags);
 			case "mod":
@@ -189,8 +190,9 @@ function mainCommandModule() {
 		return true; //to be changed
 	}
 
-	function checkPermissionsExist() {
-		return botConf.permissions !== null && botConf.permissions !== undefined;
+	function checkPermissionsExist(c) {
+		return (botConf.permissions !== null && botConf.permissions !== undefined) &&
+			(botConf.permissions[c]);
 	}
 
 
@@ -200,7 +202,7 @@ function mainCommandModule() {
 
 	return {
 		//Send the list of commands
-		cmd: function (channel) {
+		cmd: function (channel, tags) {
 			if (!canUseCommand("cmd", tags)) return false;
 
 			client.say(channel, `The full list of commands: ${Object.keys(commands)}`);
@@ -223,11 +225,13 @@ function mainCommandModule() {
 				}
 
 				if (success) saveCurrentGameToList();
-				return success;
 			} else {
 				client.say(channel, `${channel} has died ${botStorage.currentGame.deathCounter} times this game.`);
 				client.say(channel, `Death-counters commands: ${Object.keys(deathCounterCommands)}`);
+				success = false;
 			}
+
+			return success;
 		},
 		//Game
 		gameCommandCaller: function (channel, tags, message) {
@@ -238,10 +242,10 @@ function mainCommandModule() {
 			if (message.length !== 0) {
 				if (gameCommands.hasOwnProperty(message[0])) {
 					success = gameCommands[message[0]](channel, tags, message.slice(1));
-				} else {
-					client.say(channel, `Game commands: ${Object.keys(gameCommands)}`);
-					success = false;
 				}
+			} else {
+				client.say(channel, `Game commands: ${Object.keys(gameCommands)}`);
+				success = false;
 			}
 			if (success) saveCurrentGameToList();
 			return success;
@@ -255,10 +259,10 @@ function mainCommandModule() {
 			if (message.length !== 0) {
 				if (bossCommands.hasOwnProperty(message[0])) {
 					success = bossCommands[message[0]](channel, tags, message.slice(1));
-				} else {
-					client.say(channel, `Boss commands: ${Object.keys(bossCommands)}`);
-					success = false;
 				}
+			} else {
+				client.say(channel, `Boss commands: ${Object.keys(bossCommands)}`);
+				success = false;
 			}
 
 			if (success) saveCurrentGameToList();

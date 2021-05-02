@@ -63,6 +63,9 @@ function gameCommandModule() {
                 return false;
             }
             if (game !== null && game !== undefined && game.length > 0) {
+                if (game.length > 10){
+                    game = game.substr(0, 10);
+                }
                 botStorage.games[botStorage.gameID] = emptyGame(game);
                 botStorage.gameID++;
                 changeGame(game);
@@ -73,6 +76,9 @@ function gameCommandModule() {
         },
         changeGame: function (channel, tags, game){
             game = game.join(" ").trim();
+
+            console.log(game);
+
             if(changeGame(game)){
                 client.say(channel, `Game changed to ${game}`);
             } else {

@@ -52,13 +52,13 @@ Smoother transitions.
 # Commands
 !rb commands - WIP
 
--->!rb game
+!rb game
 !rb game add <Game Name>
 !rb game change <Game Name>
 !rb game rename <Old Game Name>, <New Game Name>
 !rb game delete <Game Name>
 
--->!rb boss <Boss name (optional)>
+!rb boss <Boss name (optional)>
 !rb boss show
 !rb boss hide
 !rb boss add <Boss Name>
@@ -67,7 +67,7 @@ Smoother transitions.
 !rb boss delete <Boss Name>
 !rb boss finish
 
--->!rb stage <Stage name (optional)>
+!rb stage <Stage name (optional)>
 !rb stage show
 !rb stage hide
 !rb stage add <Stage Name>
@@ -76,7 +76,7 @@ Smoother transitions.
 !rb stage delete <Stage Name>
 !rb stage finish
 
--->!rb death
+!rb death
 !rb death add
 !rb death set <number>
 

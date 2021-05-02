@@ -127,7 +127,7 @@ function stageCommandModule() {
             return true;
         },
         finish: function (channel) {
-            if (checkCurrentGame() && !isStageFinished()) {
+            if (checkCurrentGame() && !isStageFinished() && checkCurrentStage()) {
                 botStorage.currentGame.currentStage.finished = true;
                 client.say(channel, `Stage ${botStorage.currentGame.currentStage.name} finished with ${botStorage.currentGame.currentStage.deaths}.`);
                 hideStageLine();

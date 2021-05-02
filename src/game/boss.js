@@ -126,7 +126,7 @@ function stageCommandModule() {
             return true;
         },
         finish: function (channel) {
-            if (checkCurrentGame() && !isBossFinished()) {
+            if (checkCurrentGame() && !isBossFinished() && checkCurrentBoss()) {
                 botStorage.currentGame.currentBoss.finished = true;
                 client.say(channel, `Boss ${botStorage.currentGame.currentBoss.name} finished with ${botStorage.currentGame.currentBoss.deaths}.`);
                 hideBossLine();
