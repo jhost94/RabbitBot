@@ -38,9 +38,10 @@ function botMaintenanceModule() {
 			client.connect();
 			client.on('message', (channel, tags, message, self) => {
 				var success = false;
-				tag = tags;
 				// Ignore echoed messages.
 				if (self) return;
+				
+				tag = tags;
 
 				var command = message.split(" ");
 				var cmdArray = command.slice(2);
