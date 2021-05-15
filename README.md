@@ -52,7 +52,7 @@ Smoother transitions.
 # Commands
 !rb commands - WIP
 
-!rb game
+->!rb game
 !rb game add <Game Name>
 !rb game change <Game Name>
 !rb game rename <Old Game Name>, <New Game Name>

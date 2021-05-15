@@ -10,13 +10,14 @@ let deathCounterCommands = {
 //DeathCounter commands
 function deathCounterCommandModule() {
 
-    function checkExtraCounters(c){
-        if(botStorage.currentGame.hasOwnProperty(c)){
-            if(botStorage.currentGame.c !== undefined && 
-                botStorage.currentGame.c.deaths !== null &&
-                !botStorage.currentGame.c.finished) {
+    function checkExtraCounters(c) {
+        let currentC = "current" + c;
+        let visibleC = "show" + c;
+        if (botStorage.currentGame[visibleC] && botStorage.currentGame.hasOwnProperty(currentC)) {
+            if (typeof botStorage.currentGame[currentC].deaths === "number" &&
+                !botStorage.currentGame[currentC].finished) {
 
-                botStorage.currentGame.c.deaths++;
+                botStorage.currentGame[currentC].deaths++;
             }
         }
     }
@@ -34,13 +35,14 @@ function deathCounterCommandModule() {
                 return false;
             }
 
+            checkExtraCounters("Stage");
+            checkExtraCounters("Boss");
             botStorage.currentGame.deathCounter++;
-            
-            
+
             return true;
         },
         set: function set(channel, tags, n) {
-            if(!checkDeathCounter()){
+            if (!checkDeathCounter()) {
                 client.say(channel, "There is no current game active.");
                 return false;
             }
@@ -52,6 +54,3 @@ function deathCounterCommandModule() {
         }
     }
 }
-
-
-
