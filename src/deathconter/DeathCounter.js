@@ -1,5 +1,3 @@
-//const { client } = require("tmi.js");
-
 let deathCommandFunctionality = deathCounterCommandModule();
 
 let deathCounterCommands = {
@@ -14,7 +12,7 @@ function deathCounterCommandModule() {
         let currentC = "current" + c;
         let visibleC = "show" + c;
         if (botStorage.currentGame[visibleC] && botStorage.currentGame.hasOwnProperty(currentC)) {
-            if (typeof botStorage.currentGame[currentC].deaths === "number" &&
+            if (!isNaN(typeof botStorage.currentGame[currentC].deaths) &&
                 !botStorage.currentGame[currentC].finished) {
 
                 botStorage.currentGame[currentC].deaths++;

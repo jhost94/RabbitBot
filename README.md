@@ -49,10 +49,14 @@ Transition when removing Boss on screen is sloppy.
 Fixed stage duplicating when appearing on screen with no bosses.
 Smoother transitions.
 
-# Commands
-!rb commands - WIP
+0.8.0
+Fixed all bugs caught on test streams.
+Final version, for now.
 
-->!rb game
+# Commands
+!rb cmd
+
+!rb game
 !rb game add <Game Name>
 !rb game change <Game Name>
 !rb game rename <Old Game Name>, <New Game Name>

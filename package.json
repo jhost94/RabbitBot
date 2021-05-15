@@ -1,23 +1,23 @@
 {
-  "name": "rabbot",
-  "version": "0.5.1",
-  "description": "A twitch bot",
-  "main": "src",
-  "scripts": {
-    "start": "node .",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jhost94/Rabbot.git"
-  },
-  "author": "Fabio Cardoso",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/jhost94/Rabbot/issues"
-  },
-  "homepage": "https://github.com/jhost94/Rabbot#readme",
-  "dependencies": {
-    "tmi.js": "^1.5.0"
-  }
+    "name": "rabbot",
+    "version": "0.8.0",
+    "description": "A twitch bot",
+    "main": "src",
+    "scripts": {
+        "start": "node .",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/jhost94/Rabbot.git"
+    },
+    "author": "Fabio Cardoso",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/jhost94/Rabbot/issues"
+    },
+    "homepage": "https://github.com/jhost94/Rabbot#readme",
+    "dependencies": {
+        "tmi.js": "^1.5.0"
+    }
 }

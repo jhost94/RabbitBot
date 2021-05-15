@@ -1,9 +1,6 @@
 var botConf;
 var botReferenceCommand;
 
-//Debugging purposes
-var tag;
-
 const options = {
     options: {
         debug: true
@@ -40,8 +37,6 @@ function botMaintenanceModule() {
                 var success = false;
                 // Ignore echoed messages.
                 if (self) return;
-
-                tag = tags;
 
                 var command = message.split(" ");
                 var cmdArray = command.slice(2);
@@ -302,13 +297,3 @@ function getStoragedBot() {
         gameID: 0
     };
 }
-
-/**
- * User roles and authorization for command uses
- * Possible roles:
- * broadcaster - badge
- * mod
- * subscriber
- * turbo
- *
- */
